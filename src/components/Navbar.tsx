@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Menu, X, Briefcase, HeartHandshake, Home, Search } from 'lucide-react';
 import clsx from 'clsx';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -29,9 +30,9 @@ export const Navbar = () => {
                 {/* Desktop Links */}
                 <div className="hidden md:flex items-center gap-8">
                     {navLinks.map((link) => (
-                        <a
+                        <Link
                             key={link.name}
-                            href={link.path} // In a real app use Link from router
+                            to={link.path}
                             className={clsx(
                                 "flex items-center gap-2 font-medium transition-colors hover:text-sogis-services",
                                 link.special
@@ -41,7 +42,7 @@ export const Navbar = () => {
                         >
                             <link.icon className="w-4 h-4" />
                             {link.name}
-                        </a>
+                        </Link>
                     ))}
                 </div>
 
@@ -64,14 +65,15 @@ export const Navbar = () => {
                         className="absolute top-20 left-4 right-4 glass-panel rounded-2xl p-4 md:hidden flex flex-col gap-2"
                     >
                         {navLinks.map((link) => (
-                            <a
+                            <Link
                                 key={link.name}
-                                href={link.path}
+                                to={link.path}
+                                onClick={() => setIsOpen(false)}
                                 className="flex items-center gap-3 p-3 rounded-xl hover:bg-white/50 text-slate-700 font-medium"
                             >
                                 <link.icon className="w-5 h-5 text-sogis-business" />
                                 {link.name}
-                            </a>
+                            </Link>
                         ))}
                     </motion.div>
                 )}
