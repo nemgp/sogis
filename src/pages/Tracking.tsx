@@ -3,8 +3,10 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Search, CheckCircle, Clock, AlertCircle } from 'lucide-react';
 import { GlassCard } from '../components/GlassCard';
+import { useLanguage } from '../context/LanguageContext';
 
 export const Tracking = () => {
+    const { t } = useLanguage();
     const [trackingId, setTrackingId] = useState('');
     const [searchResult, setSearchResult] = useState<any>(null);
 
@@ -44,9 +46,9 @@ export const Tracking = () => {
     return (
         <div className="max-w-3xl mx-auto space-y-8">
             <div className="text-center space-y-4">
-                <h1 className="text-5xl font-heading font-bold text-slate-800">Suivre mon Dossier</h1>
+                <h1 className="text-5xl font-heading font-bold text-slate-800">{t('tracking.title')}</h1>
                 <p className="text-xl text-slate-600">
-                    Entrez votre numéro de suivi pour consulter l'état de votre demande.
+                    {t('tracking.subtitle')}
                 </p>
             </div>
 
@@ -54,7 +56,7 @@ export const Tracking = () => {
                 <form onSubmit={handleSearch} className="space-y-6">
                     <div>
                         <label className="block text-sm font-medium text-slate-700 mb-2">
-                            Numéro de suivi
+                            {t('tracking.placeholder')}
                         </label>
                         <div className="flex gap-3">
                             <input
@@ -66,7 +68,7 @@ export const Tracking = () => {
                             />
                             <button type="submit" className="btn-primary flex items-center gap-2 px-6">
                                 <Search size={20} />
-                                Rechercher
+                                {t('tracking.button')}
                             </button>
                         </div>
                     </div>
