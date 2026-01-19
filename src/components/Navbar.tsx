@@ -1,18 +1,24 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Menu, X, Briefcase, HeartHandshake, Home, Search } from 'lucide-react';
+import { Menu, X, Briefcase, HeartHandshake, Home, Search, Languages } from 'lucide-react';
 import clsx from 'clsx';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useLanguage } from '../context/LanguageContext';
 
 export const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
+    const { language, setLanguage, t } = useLanguage();
 
     const navLinks = [
-        { name: 'Accueil', path: '/', icon: Home },
-        { name: 'Business & Finance', path: '/business', icon: Briefcase },
-        { name: 'Services & Events', path: '/services', icon: HeartHandshake },
-        { name: 'Suivre mon Dossier', path: '/tracking', icon: Search, special: true },
+        { name: t('nav.home'), path: '/', icon: Home },
+        { name: t('nav.business'), path: '/business', icon: Briefcase },
+        { name: t('nav.services'), path: '/services', icon: HeartHandshake },
+        { name: t('nav.tracking'), path: '/tracking', icon: Search, special: true },
     ];
+
+    const toggleLanguage = () => {
+        setLanguage(language === 'fr' ? 'en' : 'fr');
+    };
 
     return (
         <nav className="fixed top-0 left-0 w-full z-50 px-4 py-4">
@@ -22,7 +28,7 @@ export const Navbar = () => {
                     <div className="w-10 h-10 bg-gradient-to-br from-sogis-business to-sogis-services rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-lg">
                         S
                     </div>
-                    <span className="font-heading font-bold text-2xl bg-clip-text text-transparent bg-gradient-to-r from-sogis-business to-sogis-services">
+                    <span className="font-heading font-bold text-2xl bg-clip-text text-transparent bg-gradient-to-r from-sogis-business to-sogis-services hidden sm:block">
                         SOGIS
                     </span>
                 </div>
@@ -31,7 +37,7 @@ export const Navbar = () => {
                 <div className="hidden md:flex items-center gap-8">
                     {navLinks.map((link) => (
                         <Link
-                            key={link.name}
+                            key={link.path}
                             to={link.path}
                             className={clsx(
                                 "flex items-center gap-2 font-medium transition-colors hover:text-sogis-services",
@@ -46,13 +52,33 @@ export const Navbar = () => {
                     ))}
                 </div>
 
-                {/* Mobile Menu Button */}
-                <button
-                    onClick={() => setIsOpen(!isOpen)}
-                    className="md:hidden p-2 text-slate-600 hover:bg-black/5 rounded-lg"
-                >
-                    {isOpen ? <X /> : <Menu />}
-                </button>
+                {/* Right Side: Language Toggle + SOGIS Text */}
+                <div className="flex items-center gap-4">
+                    {/* Language Toggle Button */}
+                    <button
+                        onClick={toggleLanguage}
+                        className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/50 hover:bg-white/70 transition-all border border-slate-200/50 text-slate-700 font-medium"
+                        title={language === 'fr' ? 'Switch to English' : 'Passer au Français'}
+                    >
+                        <Languages className="w-4 h-4" />
+                        <span className="text-sm font-semibold">{language.toUpperCase()}</span>
+                    </button>
+
+                    {/* SOGIS Text - Desktop Only */}
+                    <div className="hidden lg:block">
+                        <span className="font-heading font-bold text-xl bg-clip-text text-transparent bg-gradient-to-r from-sogis-business to-sogis-services">
+                            SOGIS
+                        </span>
+                    </div>
+
+                    {/* Mobile Menu Button */}
+                    <button
+                        onClick={() => setIsOpen(!isOpen)}
+                        className="md:hidden p-2 text-slate-600 hover:bg-black/5 rounded-lg"
+                    >
+                        {isOpen ? <X /> : <Menu />}
+                    </button>
+                </div>
             </div>
 
             {/* Mobile Menu */}
@@ -66,7 +92,7 @@ export const Navbar = () => {
                     >
                         {navLinks.map((link) => (
                             <Link
-                                key={link.name}
+                                key={link.path}
                                 to={link.path}
                                 onClick={() => setIsOpen(false)}
                                 className="flex items-center gap-3 p-3 rounded-xl hover:bg-white/50 text-slate-700 font-medium"
