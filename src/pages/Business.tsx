@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { TrendingUp, Scale, HardHat } from 'lucide-react';
 import { GlassCard } from '../components/GlassCard';
 import { ContactForm } from '../components/ContactForm';
+import { Testimonials } from '../components/Testimonials';
 import { useLanguage } from '../context/LanguageContext';
 
 export const Business = () => {
@@ -50,42 +51,39 @@ export const Business = () => {
                 ))}
             </div>
 
-            {/* Mock Investment Opportunities */}
-            <div className="space-y-6">
-                <h2 className="text-3xl font-heading font-bold text-slate-800">{t('business.opportunities.title')}</h2>
-                <div className="grid md:grid-cols-2 gap-6">
-                    <GlassCard className="flex flex-col gap-4">
-                        <div className="h-48 rounded-xl bg-gradient-to-br from-blue-100 to-blue-50 w-full flex items-center justify-center text-blue-300 font-bold text-lg">
-                            [Image Projet Immobilier]
-                        </div>
-                        <div className="space-y-2">
-                            <span className="px-3 py-1 rounded-full bg-green-100 text-green-700 text-xs font-bold uppercase">{t('business.opportunity1.status')}</span>
-                            <h3 className="text-2xl font-bold text-slate-800">{t('business.opportunity1.title')}</h3>
-                            <p className="text-slate-600">{t('business.opportunity1.description')}</p>
-                            <div className="flex justify-between items-center text-sm font-medium text-slate-500 pt-2 border-t border-slate-200/50">
-                                <span>{t('business.opportunity1.return')}</span>
-                                <span>{t('business.opportunity1.min')}</span>
-                            </div>
-                        </div>
-                        <button className="btn-primary w-full mt-auto">{t('business.opportunity1.cta')}</button>
-                    </GlassCard>
 
-                    <GlassCard className="flex flex-col gap-4">
-                        <div className="h-48 rounded-xl bg-gradient-to-br from-amber-100 to-amber-50 w-full flex items-center justify-center text-amber-300 font-bold text-lg">
-                            [Image Projet Agricole]
-                        </div>
-                        <div className="space-y-2">
-                            <span className="px-3 py-1 rounded-full bg-green-100 text-green-700 text-xs font-bold uppercase">{t('business.opportunity2.status')}</span>
-                            <h3 className="text-2xl font-bold text-slate-800">{t('business.opportunity2.title')}</h3>
-                            <p className="text-slate-600">{t('business.opportunity2.description')}</p>
-                            <div className="flex justify-between items-center text-sm font-medium text-slate-500 pt-2 border-t border-slate-200/50">
-                                <span>{t('business.opportunity2.return')}</span>
-                                <span>{t('business.opportunity2.min')}</span>
-                            </div>
-                        </div>
-                        <button className="btn-primary w-full mt-auto">{t('business.opportunity2.cta')}</button>
-                    </GlassCard>
+            {/* Customer Testimonials */}
+            <div className="space-y-6">
+                <div className="text-center">
+                    <h2 className="text-3xl font-heading font-bold text-slate-800 mb-2">{t('testimonials.business.title')}</h2>
+                    <p className="text-slate-600">{t('testimonials.business.subtitle')}</p>
                 </div>
+                <Testimonials testimonials={[
+                    {
+                        name: t('testimonial.business1.name'),
+                        role: t('testimonial.business1.role'),
+                        text: t('testimonial.business1.text'),
+                        rating: 5
+                    },
+                    {
+                        name: t('testimonial.business2.name'),
+                        role: t('testimonial.business2.role'),
+                        text: t('testimonial.business2.text'),
+                        rating: 5
+                    },
+                    {
+                        name: t('testimonial.business3.name'),
+                        role: t('testimonial.business3.role'),
+                        text: t('testimonial.business3.text'),
+                        rating: 5
+                    },
+                    {
+                        name: t('testimonial.business4.name'),
+                        role: t('testimonial.business4.role'),
+                        text: t('testimonial.business4.text'),
+                        rating: 5
+                    }
+                ]} />
             </div>
 
             {/* Contact Form */}

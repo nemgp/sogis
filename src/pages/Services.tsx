@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Users, Truck, Music, CalendarCheck, Star } from 'lucide-react';
 import { GlassCard } from '../components/GlassCard';
 import { ContactForm } from '../components/ContactForm';
+import { Testimonials } from '../components/Testimonials';
 import { useLanguage } from '../context/LanguageContext';
 
 export const Services = () => {
@@ -12,12 +13,6 @@ export const Services = () => {
         { title: t('services.category.personnel'), icon: Users },
         { title: t('services.category.logistics'), icon: Truck },
         { title: t('services.category.events'), icon: Music },
-    ];
-
-    const personnel = [
-        { name: t('services.partner1.name'), role: t('services.partner1.role'), rating: 4.8, reviews: 124 },
-        { name: t('services.partner2.name'), role: t('services.partner2.role'), rating: 4.9, reviews: 89 },
-        { name: t('services.partner3.name'), role: t('services.partner3.role'), rating: 4.7, reviews: 56 },
     ];
 
     return (
@@ -40,27 +35,38 @@ export const Services = () => {
             </div>
 
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {/* Marketplace Section */}
+                {/* Customer Testimonials */}
                 <div className="lg:col-span-2 space-y-6">
-                    <h2 className="text-3xl font-heading font-bold text-slate-800">{t('services.partners.title')}</h2>
-                    <div className="grid sm:grid-cols-2 gap-4">
-                        {personnel.map((p, idx) => (
-                            <GlassCard key={idx} className="flex items-center gap-4">
-                                <div className="w-16 h-16 rounded-full bg-slate-200 flex-shrink-0" />
-                                <div>
-                                    <h3 className="font-bold text-slate-800">{p.name}</h3>
-                                    <div className="text-sm text-sogis-services font-medium">{p.role}</div>
-                                    <div className="flex items-center gap-1 text-xs text-slate-500 mt-1">
-                                        <Star size={12} className="fill-yellow-400 text-yellow-400" />
-                                        <span>{p.rating} ({p.reviews} {t('services.partner1.reviews')})</span>
-                                    </div>
-                                </div>
-                                <button className="ml-auto text-sm font-semibold text-sogis-services border border-sogis-services/30 px-3 py-1 rounded-lg hover:bg-sogis-services hover:text-white transition-all">
-                                    {t('services.book')}
-                                </button>
-                            </GlassCard>
-                        ))}
+                    <div className="text-center">
+                        <h2 className="text-3xl font-heading font-bold text-slate-800 mb-2">{t('testimonials.services.title')}</h2>
+                        <p className="text-slate-600">{t('testimonials.services.subtitle')}</p>
                     </div>
+                    <Testimonials testimonials={[
+                        {
+                            name: t('testimonial.services1.name'),
+                            role: t('testimonial.services1.role'),
+                            text: t('testimonial.services1.text'),
+                            rating: 5
+                        },
+                        {
+                            name: t('testimonial.services2.name'),
+                            role: t('testimonial.services2.role'),
+                            text: t('testimonial.services2.text'),
+                            rating: 5
+                        },
+                        {
+                            name: t('testimonial.services3.name'),
+                            role: t('testimonial.services3.role'),
+                            text: t('testimonial.services3.text'),
+                            rating: 5
+                        },
+                        {
+                            name: t('testimonial.services4.name'),
+                            role: t('testimonial.services4.role'),
+                            text: t('testimonial.services4.text'),
+                            rating: 5
+                        }
+                    ]} />
                 </div>
 
                 {/* Quote Simulator Widget */}

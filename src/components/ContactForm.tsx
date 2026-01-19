@@ -3,12 +3,14 @@ import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Send, CheckCircle2 } from 'lucide-react';
 import { GlassCard } from './GlassCard';
+import { useLanguage } from '../context/LanguageContext';
 
 interface ContactFormProps {
     serviceType: 'business' | 'services';
 }
 
 export const ContactForm = ({ serviceType }: ContactFormProps) => {
+    const { t } = useLanguage();
     const [formData, setFormData] = useState({
         name: '',
         email: '',
@@ -42,6 +44,15 @@ export const ContactForm = ({ serviceType }: ContactFormProps) => {
         setTicketId('');
     };
 
+    // Get service options based on type
+    const getServiceOptions = () => {
+        const prefix = serviceType === 'business' ? 'form.business' : 'form.services';
+        return Array.from({ length: 9 }, (_, i) => ({
+            key: `${prefix}.option${i + 1}`,
+            label: t(`${prefix}.option${i + 1}`)
+        }));
+    };
+
     if (submitted) {
         return (
             <GlassCard className="text-center space-y-6 bg-gradient-to-br from-green-50/50 to-white/30">
@@ -54,41 +65,43 @@ export const ContactForm = ({ serviceType }: ContactFormProps) => {
                 </motion.div>
 
                 <div className="space-y-3">
-                    <h3 className="text-2xl font-bold text-slate-800">Demande enregistrée !</h3>
+                    <h3 className="text-2xl font-bold text-slate-800">{t('form.success.title')}</h3>
                     <p className="text-slate-600">
-                        Votre demande a été transmise avec succès. Un conseiller vous contactera sous 48h.
+                        {t('form.success.message')}
                     </p>
                 </div>
 
                 <div className="bg-white/60 rounded-xl p-6 border-2 border-dashed border-sogis-business/30">
-                    <p className="text-sm font-medium text-slate-600 mb-2">Votre numéro de suivi :</p>
+                    <p className="text-sm font-medium text-slate-600 mb-2">{t('form.success.tracking')}</p>
                     <p className="text-3xl font-bold text-sogis-business font-mono tracking-wider">
                         {ticketId}
                     </p>
                     <p className="text-xs text-slate-500 mt-3">
-                        💾 Conservez ce numéro pour suivre l'évolution de votre dossier
+                        {t('form.success.note')}
                     </p>
                 </div>
 
                 <div className="flex gap-3 justify-center">
                     <Link to="/tracking" className="btn-primary">
-                        Suivre mon dossier
+                        {t('form.success.track')}
                     </Link>
                     <button onClick={handleReset} className="btn-secondary">
-                        Nouvelle demande
+                        {t('form.success.new')}
                     </button>
                 </div>
             </GlassCard>
         );
     }
 
+    const serviceOptions = getServiceOptions();
+
     return (
         <GlassCard>
-            <h3 className="text-2xl font-bold text-slate-800 mb-6">Contactez-nous</h3>
+            <h3 className="text-2xl font-bold text-slate-800 mb-6">{t('form.title')}</h3>
             <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="grid md:grid-cols-2 gap-4">
                     <div>
-                        <label className="block text-sm font-medium text-slate-700 mb-1">Nom complet</label>
+                        <label className="block text-sm font-medium text-slate-700 mb-1">{t('form.label.name')}</label>
                         <input
                             type="text"
                             required
@@ -98,7 +111,7 @@ export const ContactForm = ({ serviceType }: ContactFormProps) => {
                         />
                     </div>
                     <div>
-                        <label className="block text-sm font-medium text-slate-700 mb-1">Email</label>
+                        <label className="block text-sm font-medium text-slate-700 mb-1">{t('form.label.email')}</label>
                         <input
                             type="email"
                             required
@@ -110,7 +123,7 @@ export const ContactForm = ({ serviceType }: ContactFormProps) => {
                 </div>
 
                 <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1">Téléphone</label>
+                    <label className="block text-sm font-medium text-slate-700 mb-1">{t('form.label.phone')}</label>
                     <input
                         type="tel"
                         required
@@ -121,47 +134,37 @@ export const ContactForm = ({ serviceType }: ContactFormProps) => {
                 </div>
 
                 <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1">Service demandé</label>
+                    <label className="block text-sm font-medium text-slate-700 mb-1">{t('form.label.service')}</label>
                     <select
                         required
                         value={formData.service}
                         onChange={(e) => setFormData({ ...formData, service: e.target.value })}
                         className="w-full rounded-lg bg-white/50 border border-white/60 px-4 py-2 text-slate-700 focus:outline-none focus:ring-2 focus:ring-sogis-business/50"
                     >
-                        <option value="">Sélectionnez...</option>
-                        {serviceType === 'business' ? (
-                            <>
-                                <option>Demande de financement</option>
-                                <option>Conseil juridique</option>
-                                <option>Suivi de chantier</option>
-                                <option>Opportunité d'investissement</option>
-                            </>
-                        ) : (
-                            <>
-                                <option>Réservation traiteur</option>
-                                <option>Service sécurité</option>
-                                <option>Hôtesses d'accueil</option>
-                                <option>Devis événementiel</option>
-                            </>
-                        )}
+                        <option value="">{t('form.placeholder.select')}</option>
+                        {serviceOptions.map((option) => (
+                            <option key={option.key} value={option.label}>
+                                {option.label}
+                            </option>
+                        ))}
                     </select>
                 </div>
 
                 <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1">Message</label>
+                    <label className="block text-sm font-medium text-slate-700 mb-1">{t('form.label.message')}</label>
                     <textarea
                         required
                         rows={4}
                         value={formData.message}
                         onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                         className="w-full rounded-lg bg-white/50 border border-white/60 px-4 py-2 text-slate-700 focus:outline-none focus:ring-2 focus:ring-sogis-business/50 resize-none"
-                        placeholder="Décrivez votre besoin..."
+                        placeholder={t('form.placeholder.message')}
                     />
                 </div>
 
                 <button type="submit" className="w-full btn-primary flex items-center justify-center gap-2">
                     <Send size={20} />
-                    Envoyer la demande
+                    {t('form.button.submit')}
                 </button>
             </form>
         </GlassCard>

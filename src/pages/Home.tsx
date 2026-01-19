@@ -129,7 +129,7 @@ export const Home = () => {
                     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
                         <GlassCard className="border-l-4 border-l-sogis-business hover:scale-105 transition-transform">
                             <div className="flex items-start gap-3">
-                                <span className="text-2xl font-bold text-sogis-business">1</span>
+                                <span className="text-3xl">💰</span>
                                 <div>
                                     <h4 className="font-bold text-slate-800 mb-2">{t('business.activity1.title')}</h4>
                                     <p className="text-sm text-slate-600">
@@ -141,7 +141,7 @@ export const Home = () => {
 
                         <GlassCard className="border-l-4 border-l-sogis-business hover:scale-105 transition-transform">
                             <div className="flex items-start gap-3">
-                                <span className="text-2xl font-bold text-sogis-business">2</span>
+                                <span className="text-3xl">📋</span>
                                 <div>
                                     <h4 className="font-bold text-slate-800 mb-2">{t('business.activity2.title')}</h4>
                                     <p className="text-sm text-slate-600">
@@ -153,7 +153,7 @@ export const Home = () => {
 
                         <GlassCard className="border-l-4 border-l-sogis-business hover:scale-105 transition-transform">
                             <div className="flex items-start gap-3">
-                                <span className="text-2xl font-bold text-sogis-business">3</span>
+                                <span className="text-3xl">📄</span>
                                 <div>
                                     <h4 className="font-bold text-slate-800 mb-2">{t('business.activity3.title')}</h4>
                                     <p className="text-sm text-slate-600">
@@ -165,7 +165,7 @@ export const Home = () => {
 
                         <GlassCard className="border-l-4 border-l-sogis-business hover:scale-105 transition-transform">
                             <div className="flex items-start gap-3">
-                                <span className="text-2xl font-bold text-sogis-business">4</span>
+                                <span className="text-3xl">🛡️</span>
                                 <div>
                                     <h4 className="font-bold text-slate-800 mb-2">{t('business.activity4.title')}</h4>
                                     <p className="text-sm text-slate-600">
@@ -177,7 +177,7 @@ export const Home = () => {
 
                         <GlassCard className="border-l-4 border-l-sogis-business hover:scale-105 transition-transform">
                             <div className="flex items-start gap-3">
-                                <span className="text-2xl font-bold text-sogis-business">5</span>
+                                <span className="text-3xl">💼</span>
                                 <div>
                                     <h4 className="font-bold text-slate-800 mb-2">{t('business.activity5.title')}</h4>
                                     <p className="text-sm text-slate-600">
@@ -189,7 +189,7 @@ export const Home = () => {
 
                         <GlassCard className="border-l-4 border-l-sogis-business hover:scale-105 transition-transform">
                             <div className="flex items-start gap-3">
-                                <span className="text-2xl font-bold text-sogis-business">6</span>
+                                <span className="text-3xl">⚖️</span>
                                 <div>
                                     <h4 className="font-bold text-slate-800 mb-2">{t('business.activity6.title')}</h4>
                                     <p className="text-sm text-slate-600">
@@ -201,7 +201,7 @@ export const Home = () => {
 
                         <GlassCard className="border-l-4 border-l-sogis-business hover:scale-105 transition-transform">
                             <div className="flex items-start gap-3">
-                                <span className="text-2xl font-bold text-sogis-business">7</span>
+                                <span className="text-3xl">🌍</span>
                                 <div>
                                     <h4 className="font-bold text-slate-800 mb-2">{t('business.activity7.title')}</h4>
                                     <p className="text-sm text-slate-600">
@@ -213,7 +213,7 @@ export const Home = () => {
 
                         <GlassCard className="border-l-4 border-l-sogis-business hover:scale-105 transition-transform">
                             <div className="flex items-start gap-3">
-                                <span className="text-2xl font-bold text-sogis-business">8</span>
+                                <span className="text-3xl">🤝</span>
                                 <div>
                                     <h4 className="font-bold text-slate-800 mb-2">{t('business.activity8.title')}</h4>
                                     <p className="text-sm text-slate-600">
@@ -225,7 +225,7 @@ export const Home = () => {
 
                         <GlassCard className="border-l-4 border-l-sogis-business hover:scale-105 transition-transform">
                             <div className="flex items-start gap-3">
-                                <span className="text-2xl font-bold text-sogis-business">9</span>
+                                <span className="text-3xl">📊</span>
                                 <div>
                                     <h4 className="font-bold text-slate-800 mb-2">{t('business.activity9.title')}</h4>
                                     <p className="text-sm text-slate-600">
@@ -247,7 +247,7 @@ export const Home = () => {
                     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
                         <GlassCard className="border-l-4 border-l-sogis-services hover:scale-105 transition-transform">
                             <div className="flex items-start gap-3">
-                                <span className="text-2xl font-bold text-sogis-services">A</span>
+                                <span className="text-3xl">🍽️</span>
                                 <div>
                                     <h4 className="font-bold text-slate-800 mb-2">{t('service.a.title')}</h4>
                                     <p className="text-sm text-slate-600">
@@ -259,7 +259,7 @@ export const Home = () => {
 
                         <GlassCard className="border-l-4 border-l-sogis-services hover:scale-105 transition-transform">
                             <div className="flex items-start gap-3">
-                                <span className="text-2xl font-bold text-sogis-services">B</span>
+                                <span className="text-3xl">☕</span>
                                 <div>
                                     <h4 className="font-bold text-slate-800 mb-2">{t('service.b.title')}</h4>
                                     <p className="text-sm text-slate-600">
@@ -271,7 +271,7 @@ export const Home = () => {
 
                         <GlassCard className="border-l-4 border-l-sogis-services hover:scale-105 transition-transform">
                             <div className="flex items-start gap-3">
-                                <span className="text-2xl font-bold text-sogis-services">C</span>
+                                <span className="text-3xl">🔥</span>
                                 <div>
                                     <h4 className="font-bold text-slate-800 mb-2">{t('service.c.title')}</h4>
                                     <p className="text-sm text-slate-600">
@@ -283,7 +283,7 @@ export const Home = () => {
 
                         <GlassCard className="border-l-4 border-l-sogis-services hover:scale-105 transition-transform">
                             <div className="flex items-start gap-3">
-                                <span className="text-2xl font-bold text-sogis-services">D</span>
+                                <span className="text-3xl">🎭</span>
                                 <div>
                                     <h4 className="font-bold text-slate-800 mb-2">{t('service.d.title')}</h4>
                                     <p className="text-sm text-slate-600">
@@ -295,7 +295,7 @@ export const Home = () => {
 
                         <GlassCard className="border-l-4 border-l-sogis-services hover:scale-105 transition-transform">
                             <div className="flex items-start gap-3">
-                                <span className="text-2xl font-bold text-sogis-services">E</span>
+                                <span className="text-3xl">🏗️</span>
                                 <div>
                                     <h4 className="font-bold text-slate-800 mb-2">{t('service.e.title')}</h4>
                                     <p className="text-sm text-slate-600">
@@ -307,7 +307,7 @@ export const Home = () => {
 
                         <GlassCard className="border-l-4 border-l-sogis-services hover:scale-105 transition-transform">
                             <div className="flex items-start gap-3">
-                                <span className="text-2xl font-bold text-sogis-services">F</span>
+                                <span className="text-3xl">👋</span>
                                 <div>
                                     <h4 className="font-bold text-slate-800 mb-2">{t('service.f.title')}</h4>
                                     <p className="text-sm text-slate-600">
@@ -319,7 +319,7 @@ export const Home = () => {
 
                         <GlassCard className="border-l-4 border-l-sogis-services hover:scale-105 transition-transform">
                             <div className="flex items-start gap-3">
-                                <span className="text-2xl font-bold text-sogis-services">G</span>
+                                <span className="text-3xl">🛡️</span>
                                 <div>
                                     <h4 className="font-bold text-slate-800 mb-2">{t('service.g.title')}</h4>
                                     <p className="text-sm text-slate-600">
@@ -331,7 +331,7 @@ export const Home = () => {
 
                         <GlassCard className="border-l-4 border-l-sogis-services hover:scale-105 transition-transform">
                             <div className="flex items-start gap-3">
-                                <span className="text-2xl font-bold text-sogis-services">H</span>
+                                <span className="text-3xl">👨‍🍳</span>
                                 <div>
                                     <h4 className="font-bold text-slate-800 mb-2">{t('service.h.title')}</h4>
                                     <p className="text-sm text-slate-600">
@@ -343,7 +343,7 @@ export const Home = () => {
 
                         <GlassCard className="border-l-4 border-l-sogis-services hover:scale-105 transition-transform">
                             <div className="flex items-start gap-3">
-                                <span className="text-2xl font-bold text-sogis-services">I</span>
+                                <span className="text-3xl">🥩</span>
                                 <div>
                                     <h4 className="font-bold text-slate-800 mb-2">{t('service.i.title')}</h4>
                                     <p className="text-sm text-slate-600">
