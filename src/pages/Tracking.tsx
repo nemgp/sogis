@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Search, CheckCircle, Clock, AlertCircle } from 'lucide-react';
 import { GlassCard } from '../components/GlassCard';
@@ -123,7 +124,7 @@ export const Tracking = () => {
                 <div className="space-y-3">
                     <h3 className="font-bold text-slate-800 text-lg">Vous n'avez pas encore de numéro de suivi ?</h3>
                     <p className="text-slate-600">
-                        Soumettez une demande via nos modules <a href="/business" className="text-sogis-business font-semibold underline">Business</a> ou <a href="/services" className="text-sogis-services font-semibold underline">Services</a> pour obtenir votre numéro de suivi.
+                        Soumettez une demande via nos modules <Link to="/business" className="text-sogis-business font-semibold underline">Business</Link> ou <Link to="/services" className="text-sogis-services font-semibold underline">Services</Link> pour obtenir votre numéro de suivi.
                     </p>
                 </div>
             </GlassCard>

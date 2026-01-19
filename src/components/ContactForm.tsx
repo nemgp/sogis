@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Send, CheckCircle2 } from 'lucide-react';
 import { GlassCard } from './GlassCard';
@@ -70,9 +71,9 @@ export const ContactForm = ({ serviceType }: ContactFormProps) => {
                 </div>
 
                 <div className="flex gap-3 justify-center">
-                    <a href="/tracking" className="btn-primary">
+                    <Link to="/tracking" className="btn-primary">
                         Suivre mon dossier
-                    </a>
+                    </Link>
                     <button onClick={handleReset} className="btn-secondary">
                         Nouvelle demande
                     </button>

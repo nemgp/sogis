@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Building2, PartyPopper, ArrowRight } from 'lucide-react';
 import { GlassCard } from '../components/GlassCard';
@@ -23,9 +24,9 @@ export const Home = () => {
                         Expertise en investissement, accompagnement juridique et opportunités d'affaires en Afrique.
                         La rigueur institutionnelle pour vos projets.
                     </p>
-                    <a href="/business" className="flex items-center gap-2 text-sogis-business font-semibold text-lg hover:gap-4 transition-all">
+                    <Link to="/business" className="flex items-center gap-2 text-sogis-business font-semibold text-lg hover:gap-4 transition-all">
                         Accéder à l'espace Business <ArrowRight size={20} />
-                    </a>
+                    </Link>
                 </GlassCard>
             </motion.div>
 
@@ -45,9 +46,9 @@ export const Home = () => {
                         Logistique événementielle, personnel qualifié et services à la demande.
                         Flexibilité et dynamisme pour vos événements.
                     </p>
-                    <a href="/services" className="flex items-center gap-2 text-sogis-services font-semibold text-lg hover:gap-4 transition-all">
+                    <Link to="/services" className="flex items-center gap-2 text-sogis-services font-semibold text-lg hover:gap-4 transition-all">
                         Accéder à l'espace Services <ArrowRight size={20} />
-                    </a>
+                    </Link>
                 </GlassCard>
             </motion.div>
 
