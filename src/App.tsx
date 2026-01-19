@@ -8,7 +8,7 @@ import { Tracking } from './pages/Tracking';
 
 function App() {
     return (
-        <BrowserRouter>
+        <BrowserRouter basename="/sogis">
             <Layout>
                 <Routes>
                     <Route path="/" element={<Home />} />
