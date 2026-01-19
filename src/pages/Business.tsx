@@ -31,7 +31,7 @@ export const Business = () => {
             <div className="text-center space-y-4">
                 <h1 className="text-5xl font-heading font-bold text-sogis-business">Pôle Business</h1>
                 <p className="text-xl text-slate-600 max-w-2xl mx-auto">
-                    Votre partenaire de confiance pour sécuriser vos investissements et vos projets en Afrique.
+                    Votre partenaire de confiance pour sécuriser vos investissements et vos projets au Cameroun.
                 </p>
             </div>
 
