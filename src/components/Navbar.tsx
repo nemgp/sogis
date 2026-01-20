@@ -21,17 +21,16 @@ export const Navbar = () => {
     };
 
     return (
-        <nav className="fixed top-0 left-0 w-full z-50 px-4 py-4">
-            <div className="max-w-7xl mx-auto glass-panel rounded-2xl px-6 py-3 flex items-center justify-between">
+        <nav className="fixed top-0 left-0 w-full z-50 px-4 py-2">
+            <div className="max-w-7xl mx-auto glass-panel rounded-2xl px-6 py-2 flex items-center justify-between">
                 {/* Logo */}
-                <div className="flex items-center gap-2">
-                    <div className="w-10 h-10 bg-gradient-to-br from-sogis-business to-sogis-services rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-lg">
-                        S
-                    </div>
-                    <span className="font-heading font-bold text-2xl bg-clip-text text-transparent bg-gradient-to-r from-sogis-business to-sogis-services hidden sm:block">
-                        SOGIS
-                    </span>
-                </div>
+                <Link to="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
+                    <img
+                        src="/sogis/sogis-navbar-logo.png"
+                        alt="SOGIS"
+                        className="h-12 w-auto rounded-lg"
+                    />
+                </Link>
 
                 {/* Desktop Links */}
                 <div className="hidden md:flex items-center gap-8">
@@ -52,7 +51,7 @@ export const Navbar = () => {
                     ))}
                 </div>
 
-                {/* Right Side: Language Toggle + SOGIS Text */}
+                {/* Right Side: Language Toggle */}
                 <div className="flex items-center gap-4">
                     {/* Language Toggle Button */}
                     <button
@@ -63,13 +62,6 @@ export const Navbar = () => {
                         <Languages className="w-4 h-4" />
                         <span className="text-sm font-semibold">{language.toUpperCase()}</span>
                     </button>
-
-                    {/* SOGIS Text - Desktop Only */}
-                    <div className="hidden lg:block">
-                        <span className="font-heading font-bold text-xl bg-clip-text text-transparent bg-gradient-to-r from-sogis-business to-sogis-services">
-                            SOGIS
-                        </span>
-                    </div>
 
                     {/* Mobile Menu Button */}
                     <button

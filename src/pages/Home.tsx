@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Building2, PartyPopper, ArrowRight, MapPin, Phone, Mail, Users } from 'lucide-react';
+import { Building2, PartyPopper, ArrowRight, MapPin, Phone, Mail, Users, Settings } from 'lucide-react';
 import { GlassCard } from '../components/GlassCard';
 import { useLanguage } from '../context/LanguageContext';
 
@@ -449,6 +449,29 @@ export const Home = () => {
                     </div>
                 </GlassCard>
             </motion.div>
+
+            {/* Bottom Section: Logo and Admin Access */}
+            <div className="flex justify-between items-center pt-4">
+                {/* SOGIS Logo at Bottom Left */}
+                <div className="flex-1">
+                    <img
+                        src="/sogis/sogis-logo.png"
+                        alt="SOGIS - Business & Services"
+                        className="h-16 w-auto opacity-90 hover:opacity-100 transition-opacity"
+                    />
+                </div>
+
+                {/* Discreet Admin Access */}
+                <div className="flex-shrink-0">
+                    <Link
+                        to="/admin"
+                        className="inline-flex items-center gap-2 text-slate-400 hover:text-slate-600 transition-all opacity-50 hover:opacity-100 hover:scale-110"
+                        title="Administration"
+                    >
+                        <Settings size={16} />
+                    </Link>
+                </div>
+            </div>
         </div>
     );
 };

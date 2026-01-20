@@ -3,32 +3,12 @@ import { motion } from 'framer-motion';
 import { TrendingUp, Scale, HardHat } from 'lucide-react';
 import { GlassCard } from '../components/GlassCard';
 import { ContactForm } from '../components/ContactForm';
-import { Testimonials } from '../components/Testimonials';
+import { CommentForm } from '../components/CommentForm';
+import { CommentsList } from '../components/CommentsList';
 import { useLanguage } from '../context/LanguageContext';
 
 export const Business = () => {
     const { t } = useLanguage();
-
-    const services = [
-        {
-            title: t('business.service1.title'),
-            icon: TrendingUp,
-            description: t('business.service1.description'),
-            color: "text-blue-600"
-        },
-        {
-            title: t('business.service2.title'),
-            icon: Scale,
-            description: t('business.service2.description'),
-            color: "text-indigo-600"
-        },
-        {
-            title: t('business.service3.title'),
-            icon: HardHat,
-            description: t('business.service3.description'),
-            color: "text-cyan-600"
-        }
-    ];
 
     return (
         <div className="space-y-12">
@@ -39,57 +19,141 @@ export const Business = () => {
                 </p>
             </div>
 
-            <div className="grid md:grid-cols-3 gap-8">
-                {services.map((service, idx) => (
-                    <GlassCard key={idx} className="flex flex-col items-start gap-4 h-full">
-                        <div className={`p-3 rounded-xl bg-white/50 ${service.color}`}>
-                            <service.icon size={32} />
-                        </div>
-                        <h3 className="text-xl font-bold text-slate-800">{service.title}</h3>
-                        <p className="text-slate-600">{service.description}</p>
-                    </GlassCard>
-                ))}
-            </div>
-
-
-            {/* Customer Testimonials */}
-            <div className="space-y-6">
-                <div className="text-center">
-                    <h2 className="text-3xl font-heading font-bold text-slate-800 mb-2">{t('testimonials.business.title')}</h2>
-                    <p className="text-slate-600">{t('testimonials.business.subtitle')}</p>
-                </div>
-                <Testimonials testimonials={[
-                    {
-                        name: t('testimonial.business1.name'),
-                        role: t('testimonial.business1.role'),
-                        text: t('testimonial.business1.text'),
-                        rating: 5
-                    },
-                    {
-                        name: t('testimonial.business2.name'),
-                        role: t('testimonial.business2.role'),
-                        text: t('testimonial.business2.text'),
-                        rating: 5
-                    },
-                    {
-                        name: t('testimonial.business3.name'),
-                        role: t('testimonial.business3.role'),
-                        text: t('testimonial.business3.text'),
-                        rating: 5
-                    },
-                    {
-                        name: t('testimonial.business4.name'),
-                        role: t('testimonial.business4.role'),
-                        text: t('testimonial.business4.text'),
-                        rating: 5
-                    }
-                ]} />
-            </div>
-
-            {/* Contact Form */}
+            {/* Contact Form - NOW FIRST */}
             <div className="space-y-6">
                 <h2 className="text-3xl font-heading font-bold text-slate-800">{t('business.contact.title')}</h2>
                 <ContactForm serviceType="business" />
+            </div>
+
+            {/* Business Activities - All 9 from Homepage */}
+            <div className="space-y-6">
+                <div className="text-center">
+                    <h2 className="text-4xl font-heading font-bold text-sogis-business mb-2">{t('home.business.activities.title')}</h2>
+                    <p className="text-lg text-slate-600">{t('home.business.activities.subtitle')}</p>
+                </div>
+
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <GlassCard className="border-l-4 border-l-sogis-business hover:scale-105 transition-transform">
+                        <div className="flex items-start gap-3">
+                            <span className="text-3xl">💰</span>
+                            <div>
+                                <h4 className="font-bold text-slate-800 mb-2">{t('business.activity1.title')}</h4>
+                                <p className="text-sm text-slate-600">
+                                    {t('business.activity1.description')}
+                                </p>
+                            </div>
+                        </div>
+                    </GlassCard>
+
+                    <GlassCard className="border-l-4 border-l-sogis-business hover:scale-105 transition-transform">
+                        <div className="flex items-start gap-3">
+                            <span className="text-3xl">📋</span>
+                            <div>
+                                <h4 className="font-bold text-slate-800 mb-2">{t('business.activity2.title')}</h4>
+                                <p className="text-sm text-slate-600">
+                                    {t('business.activity2.description')}
+                                </p>
+                            </div>
+                        </div>
+                    </GlassCard>
+
+                    <GlassCard className="border-l-4 border-l-sogis-business hover:scale-105 transition-transform">
+                        <div className="flex items-start gap-3">
+                            <span className="text-3xl">📄</span>
+                            <div>
+                                <h4 className="font-bold text-slate-800 mb-2">{t('business.activity3.title')}</h4>
+                                <p className="text-sm text-slate-600">
+                                    {t('business.activity3.description')}
+                                </p>
+                            </div>
+                        </div>
+                    </GlassCard>
+
+                    <GlassCard className="border-l-4 border-l-sogis-business hover:scale-105 transition-transform">
+                        <div className="flex items-start gap-3">
+                            <span className="text-3xl">🛡️</span>
+                            <div>
+                                <h4 className="font-bold text-slate-800 mb-2">{t('business.activity4.title')}</h4>
+                                <p className="text-sm text-slate-600">
+                                    {t('business.activity4.description')}
+                                </p>
+                            </div>
+                        </div>
+                    </GlassCard>
+
+                    <GlassCard className="border-l-4 border-l-sogis-business hover:scale-105 transition-transform">
+                        <div className="flex items-start gap-3">
+                            <span className="text-3xl">💼</span>
+                            <div>
+                                <h4 className="font-bold text-slate-800 mb-2">{t('business.activity5.title')}</h4>
+                                <p className="text-sm text-slate-600">
+                                    {t('business.activity5.description')}
+                                </p>
+                            </div>
+                        </div>
+                    </GlassCard>
+
+                    <GlassCard className="border-l-4 border-l-sogis-business hover:scale-105 transition-transform">
+                        <div className="flex items-start gap-3">
+                            <span className="text-3xl">⚖️</span>
+                            <div>
+                                <h4 className="font-bold text-slate-800 mb-2">{t('business.activity6.title')}</h4>
+                                <p className="text-sm text-slate-600">
+                                    {t('business.activity6.description')}
+                                </p>
+                            </div>
+                        </div>
+                    </GlassCard>
+
+                    <GlassCard className="border-l-4 border-l-sogis-business hover:scale-105 transition-transform">
+                        <div className="flex items-start gap-3">
+                            <span className="text-3xl">🌍</span>
+                            <div>
+                                <h4 className="font-bold text-slate-800 mb-2">{t('business.activity7.title')}</h4>
+                                <p className="text-sm text-slate-600">
+                                    {t('business.activity7.description')}
+                                </p>
+                            </div>
+                        </div>
+                    </GlassCard>
+
+                    <GlassCard className="border-l-4 border-l-sogis-business hover:scale-105 transition-transform">
+                        <div className="flex items-start gap-3">
+                            <span className="text-3xl">🤝</span>
+                            <div>
+                                <h4 className="font-bold text-slate-800 mb-2">{t('business.activity8.title')}</h4>
+                                <p className="text-sm text-slate-600">
+                                    {t('business.activity8.description')}
+                                </p>
+                            </div>
+                        </div>
+                    </GlassCard>
+
+                    <GlassCard className="border-l-4 border-l-sogis-business hover:scale-105 transition-transform">
+                        <div className="flex items-start gap-3">
+                            <span className="text-3xl">📊</span>
+                            <div>
+                                <h4 className="font-bold text-slate-800 mb-2">{t('business.activity9.title')}</h4>
+                                <p className="text-sm text-slate-600">
+                                    {t('business.activity9.description')}
+                                </p>
+                            </div>
+                        </div>
+                    </GlassCard>
+                </div>
+            </div>
+
+            {/* Comments Section */}
+            <div className="space-y-6">
+                <h2 className="text-3xl font-heading font-bold text-slate-800 text-center">{t('comments.list.title')}</h2>
+                <div className="grid md:grid-cols-2 gap-8">
+                    <div>
+                        <CommentsList pageType="business" />
+                    </div>
+                    <div>
+                        <CommentForm pageType="business" />
+                    </div>
+                </div>
             </div>
         </div>
     );

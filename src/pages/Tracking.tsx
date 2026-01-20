@@ -14,7 +14,7 @@ export const Tracking = () => {
         e.preventDefault();
 
         if (!trackingId.trim()) {
-            setSearchResult({ error: 'Veuillez entrer un numéro de suivi' });
+            setSearchResult({ error: t('tracking.error.empty') });
             return;
         }
 
@@ -92,12 +92,12 @@ export const Tracking = () => {
                                         <p className="text-sm text-slate-500">ID: {searchResult.id}</p>
                                     </div>
                                     <span className="px-4 py-2 rounded-full bg-blue-100 text-blue-700 text-sm font-bold">
-                                        En cours
+                                        {t('tracking.status.inprogress')}
                                     </span>
                                 </div>
 
                                 <div className="space-y-4">
-                                    <h4 className="font-semibold text-slate-700">Historique</h4>
+                                    <h4 className="font-semibold text-slate-700">{t('tracking.history.title')}</h4>
                                     {searchResult.updates.map((update: any, idx: number) => (
                                         <div key={idx} className="flex gap-4 items-start">
                                             <div className="mt-1">{getStatusIcon(update.status)}</div>
@@ -113,7 +113,7 @@ export const Tracking = () => {
 
                                 <div className="pt-4 border-t border-white/40">
                                     <p className="text-sm text-slate-600">
-                                        💡 Vous recevrez une notification par email à chaque mise à jour de votre dossier.
+                                        {t('tracking.notification')}
                                     </p>
                                 </div>
                             </div>
@@ -124,9 +124,9 @@ export const Tracking = () => {
 
             <GlassCard className="bg-gradient-to-br from-sogis-business/10 to-sogis-services/10 border-l-4 border-l-sogis-business">
                 <div className="space-y-3">
-                    <h3 className="font-bold text-slate-800 text-lg">Vous n'avez pas encore de numéro de suivi ?</h3>
+                    <h3 className="font-bold text-slate-800 text-lg">{t('tracking.notracking.title')}</h3>
                     <p className="text-slate-600">
-                        Soumettez une demande via nos modules <Link to="/business" className="text-sogis-business font-semibold underline">Business</Link> ou <Link to="/services" className="text-sogis-services font-semibold underline">Services</Link> pour obtenir votre numéro de suivi.
+                        {t('tracking.notracking.message')} <Link to="/business" className="text-sogis-business font-semibold underline">{t('tracking.notracking.business')}</Link> {t('nav.or')} <Link to="/services" className="text-sogis-services font-semibold underline">{t('tracking.notracking.services')}</Link> {t('tracking.notracking.suffix')}
                     </p>
                 </div>
             </GlassCard>

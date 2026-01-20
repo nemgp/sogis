@@ -32,10 +32,31 @@ export const ContactForm = ({ serviceType }: ContactFormProps) => {
         e.preventDefault();
         const newTicketId = generateTicketId();
         setTicketId(newTicketId);
-        setSubmitted(true);
 
-        // In a real app, this would send to a backend
-        console.log('Form submitted:', { ...formData, ticketId: newTicketId });
+        // Create request object with status tracking
+        const requestData = {
+            ticketId: newTicketId,
+            name: formData.name,
+            email: formData.email,
+            phone: formData.phone,
+            service: formData.service,
+            message: formData.message,
+            serviceType,
+            timestamp: new Date().toISOString(),
+            status: 'pending' as const,
+            statusHistory: [{
+                status: 'pending',
+                timestamp: new Date().toISOString()
+            }]
+        };
+
+        // Save to localStorage
+        const existingRequests = JSON.parse(localStorage.getItem('projectRequests') || '[]');
+        existingRequests.push(requestData);
+        localStorage.setItem('projectRequests', JSON.stringify(existingRequests));
+
+        console.log('Request submitted and saved:', requestData);
+        setSubmitted(true);
     };
 
     const handleReset = () => {
@@ -101,7 +122,7 @@ export const ContactForm = ({ serviceType }: ContactFormProps) => {
             <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="grid md:grid-cols-2 gap-4">
                     <div>
-                        <label className="block text-sm font-medium text-slate-700 mb-1">{t('form.label.name')}</label>
+                        <label className="block text-sm font-medium text-slate-700 mb-1">{t('form.label.name')} <span className="text-red-500">*</span></label>
                         <input
                             type="text"
                             required
@@ -111,7 +132,7 @@ export const ContactForm = ({ serviceType }: ContactFormProps) => {
                         />
                     </div>
                     <div>
-                        <label className="block text-sm font-medium text-slate-700 mb-1">{t('form.label.email')}</label>
+                        <label className="block text-sm font-medium text-slate-700 mb-1">{t('form.label.email')} <span className="text-red-500">*</span></label>
                         <input
                             type="email"
                             required
@@ -123,7 +144,7 @@ export const ContactForm = ({ serviceType }: ContactFormProps) => {
                 </div>
 
                 <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1">{t('form.label.phone')}</label>
+                    <label className="block text-sm font-medium text-slate-700 mb-1">{t('form.label.phone')} <span className="text-red-500">*</span></label>
                     <input
                         type="tel"
                         required
@@ -134,7 +155,7 @@ export const ContactForm = ({ serviceType }: ContactFormProps) => {
                 </div>
 
                 <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1">{t('form.label.service')}</label>
+                    <label className="block text-sm font-medium text-slate-700 mb-1">{t('form.label.service')} <span className="text-red-500">*</span></label>
                     <select
                         required
                         value={formData.service}
@@ -151,7 +172,7 @@ export const ContactForm = ({ serviceType }: ContactFormProps) => {
                 </div>
 
                 <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1">{t('form.label.message')}</label>
+                    <label className="block text-sm font-medium text-slate-700 mb-1">{t('form.label.message')} <span className="text-red-500">*</span></label>
                     <textarea
                         required
                         rows={4}

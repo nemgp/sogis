@@ -6,6 +6,7 @@ import { Home } from './pages/Home';
 import { Business } from './pages/Business';
 import { Services } from './pages/Services';
 import { Tracking } from './pages/Tracking';
+import { Admin } from './pages/Admin';
 
 function App() {
     return (
@@ -17,10 +18,12 @@ function App() {
                         <Route path="/business" element={<Business />} />
                         <Route path="/services" element={<Services />} />
                         <Route path="/tracking" element={<Tracking />} />
+                        <Route path="/admin" element={<Admin />} />
                     </Routes>
                 </Layout>
             </BrowserRouter>
         </LanguageProvider>
+
     );
 }
 
