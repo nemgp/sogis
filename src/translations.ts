@@ -156,12 +156,6 @@ export const translations = {
         'services.book': 'Réserver',
         'services.contact.title': 'Réserver nos services',
 
-        // Tracking Page
-        'tracking.title': 'Suivre mon Dossier',
-        'tracking.subtitle': 'Entrez votre numéro de dossier pour suivre l\'avancement de votre projet',
-        'tracking.placeholder': 'Numéro de dossier',
-        'tracking.button': 'Rechercher',
-
         // Common
         'common.learn_more': 'En savoir plus',
         'common.contact': 'Nous contacter',
@@ -461,12 +455,6 @@ export const translations = {
         'services.book': 'Book',
         'services.contact.title': 'Book our services',
 
-        // Tracking Page
-        'tracking.title': 'Track my File',
-        'tracking.subtitle': 'Enter your file number to track the progress of your project',
-        'tracking.placeholder': 'File number',
-        'tracking.button': 'Search',
-
         // Common
         'common.learn_more': 'Learn more',
         'common.contact': 'Contact us',
@@ -556,6 +544,21 @@ export const translations = {
         'comments.success.new': 'New comment',
         'comments.list.empty': 'No comments yet. Be the first to share your experience!',
         'comments.list.title': 'Customer reviews',
+
+        // Tracking Page
+        'tracking.title': 'File Tracking',
+        'tracking.subtitle': 'Enter your tracking number to check the status of your request',
+        'tracking.placeholder': 'Tracking number',
+        'tracking.button': 'Search',
+        'tracking.error.empty': 'Please enter a tracking number',
+        'tracking.status.inprogress': 'In Progress',
+        'tracking.history.title': 'History',
+        'tracking.notification': '💡 You will receive an email notification for each update to your file.',
+        'tracking.notracking.title': 'Don’t have a tracking number yet?',
+        'tracking.notracking.message': 'Submit a request through our',
+        'tracking.notracking.business': 'Business',
+        'tracking.notracking.services': 'Services',
+        'tracking.notracking.suffix': 'modules to get your tracking number.',
 
         // Admin Panel
         'admin.title': 'Administration',
