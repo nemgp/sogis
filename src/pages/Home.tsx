@@ -441,10 +441,10 @@ export const Home = () => {
                             {t('home.cta.description')}
                         </p>
                         <div className="flex gap-4 justify-center flex-wrap">
-                            <Link to="/business" className="btn-primary">
+                            <Link to="/business#contact-form" className="btn-primary">
                                 {t('home.cta.business')}
                             </Link>
-                            <Link to="/services" className="btn-secondary">
+                            <Link to="/services#contact-form" className="btn-primary">
                                 {t('home.cta.services')}
                             </Link>
                         </div>

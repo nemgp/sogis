@@ -219,7 +219,8 @@ export async function validateComment(id: string): Promise<void> {
         // Utiliser GET avec paramètres URL pour contourner CORS
         const params = new URLSearchParams({
             action: 'validateComment',
-            id: id
+            id: id,
+            _: new Date().getTime().toString() // Cache busting
         });
 
         const response = await fetch(`${API_URL}?${params.toString()}`);
@@ -242,7 +243,8 @@ export async function rejectComment(id: string): Promise<void> {
         // Utiliser GET avec paramètres URL pour contourner CORS
         const params = new URLSearchParams({
             action: 'rejectComment',
-            id: id
+            id: id,
+            _: new Date().getTime().toString() // Cache busting
         });
 
         const response = await fetch(`${API_URL}?${params.toString()}`);
