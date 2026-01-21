@@ -49,17 +49,19 @@ interface APIResponse<T> {
  */
 export async function submitRequest(data: Omit<Request, 'timestamp' | 'status' | 'statusHistory'>): Promise<{ ticketId: string }> {
     try {
-        const response = await fetch(API_URL, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                action: 'addRequest',
-                data: data
-            })
+        // Utiliser GET avec paramètres URL pour contourner CORS
+        const params = new URLSearchParams({
+            action: 'addRequest',
+            ticketId: data.ticketId,
+            name: data.name,
+            email: data.email,
+            phone: data.phone,
+            service: data.service,
+            message: data.message,
+            serviceType: data.serviceType
         });
 
+        const response = await fetch(`${API_URL}?${params.toString()}`);
         const result: APIResponse<{ ticketId: string }> = await response.json();
 
         if (!result.success) {
@@ -78,17 +80,17 @@ export async function submitRequest(data: Omit<Request, 'timestamp' | 'status' |
  */
 export async function submitComment(data: Omit<Comment, 'id' | 'timestamp' | 'status'>): Promise<{ id: string }> {
     try {
-        const response = await fetch(API_URL, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                action: 'addComment',
-                data: data
-            })
+        // Utiliser GET avec paramètres URL pour contourner CORS
+        const params = new URLSearchParams({
+            action: 'addComment',
+            name: data.name,
+            email: data.email,
+            rating: data.rating.toString(),
+            comment: data.comment,
+            serviceType: data.serviceType
         });
 
+        const response = await fetch(`${API_URL}?${params.toString()}`);
         const result: APIResponse<{ id: string }> = await response.json();
 
         if (!result.success) {
@@ -167,18 +169,14 @@ export async function fetchComments(filter: 'all' | 'pending' | 'validated' | 'b
  */
 export async function updateRequestStatus(ticketId: string, status: Request['status']): Promise<void> {
     try {
-        const response = await fetch(API_URL, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                action: 'updateRequestStatus',
-                ticketId: ticketId,
-                status: status
-            })
+        // Utiliser GET avec paramètres URL pour contourner CORS
+        const params = new URLSearchParams({
+            action: 'updateRequestStatus',
+            ticketId: ticketId,
+            status: status
         });
 
+        const response = await fetch(`${API_URL}?${params.toString()}`);
         const result: APIResponse<any> = await response.json();
 
         if (!result.success) {
@@ -195,17 +193,13 @@ export async function updateRequestStatus(ticketId: string, status: Request['sta
  */
 export async function deleteRequest(ticketId: string): Promise<void> {
     try {
-        const response = await fetch(API_URL, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                action: 'deleteRequest',
-                ticketId: ticketId
-            })
+        // Utiliser GET avec paramètres URL pour contourner CORS
+        const params = new URLSearchParams({
+            action: 'deleteRequest',
+            ticketId: ticketId
         });
 
+        const response = await fetch(`${API_URL}?${params.toString()}`);
         const result: APIResponse<any> = await response.json();
 
         if (!result.success) {
@@ -222,17 +216,13 @@ export async function deleteRequest(ticketId: string): Promise<void> {
  */
 export async function validateComment(id: string): Promise<void> {
     try {
-        const response = await fetch(API_URL, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                action: 'validateComment',
-                id: id
-            })
+        // Utiliser GET avec paramètres URL pour contourner CORS
+        const params = new URLSearchParams({
+            action: 'validateComment',
+            id: id
         });
 
+        const response = await fetch(`${API_URL}?${params.toString()}`);
         const result: APIResponse<any> = await response.json();
 
         if (!result.success) {
@@ -249,17 +239,13 @@ export async function validateComment(id: string): Promise<void> {
  */
 export async function rejectComment(id: string): Promise<void> {
     try {
-        const response = await fetch(API_URL, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                action: 'rejectComment',
-                id: id
-            })
+        // Utiliser GET avec paramètres URL pour contourner CORS
+        const params = new URLSearchParams({
+            action: 'rejectComment',
+            id: id
         });
 
+        const response = await fetch(`${API_URL}?${params.toString()}`);
         const result: APIResponse<any> = await response.json();
 
         if (!result.success) {
