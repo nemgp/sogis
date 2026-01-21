@@ -79,7 +79,7 @@ export const translations = {
         'service.g.title': 'Bodyguard / Sécurité',
         'service.g.description': 'Service de sécurité et protection pour vos événements.',
 
-        'service.h.title': 'Cuisinières / Cuisinier',
+        'service.h.title': 'Cuisinières / Cuisiniers',
         'service.h.description': 'Personnel de cuisine qualifié à votre disposition.',
 
         'service.i.title': 'Production de Viandes Fumées',
@@ -179,7 +179,7 @@ export const translations = {
         'form.services.option5': 'Contrôle des Chantiers',
         'form.services.option6': 'Hôtesses d\'Accueil',
         'form.services.option7': 'Bodyguard / Sécurité',
-        'form.services.option8': 'Cuisinières / Cuisinier',
+        'form.services.option8': 'Cuisinières / Cuisiniers',
         'form.services.option9': 'Production de Viandes Fumées',
 
         // Contact Form Labels
