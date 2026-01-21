@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test API SOGIS</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+
+        button:hover {
+            background: #45a049;
+        }
+
+        .result {
+            background: #f9f9f9;
+            padding: 15px;
+            margin-top: 10px;
+            border-left: 4px solid #4CAF50;
+            white-space: pre-wrap;
+            font-family: monospace;
+            font-size: 12px;
+        }
+
+        .error {
+            border-left-color: #f44336;
+            color: #f44336;
+        }
+
+        .success {
+            border-left-color: #4CAF50;
+            color: #4CAF50;
+        }
+
+        .status {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>🧪 Test de la Base de Données SOGIS</h1>
+
+    <div class="test-section">
+        <h2>Configuration</h2>
+        <p><strong>URL de l'API:</strong></p>
+        <input type="text" id="apiUrl" style="width: 100%; padding: 8px; margin: 10px 0;"
+            value="https://script.google.com/macros/s/AKfycby0S2EG9kYN92uP_Obn0u9ucZE8hF-pB0Ej0lq7Z_MBw18D40ekxGCIZjsl3qKOAT9Nnw/exec">
+    </div>
+
+    <div class="test-section">
+        <h2>Test 1: Récupérer les demandes</h2>
+        <button onclick="testGetRequests()">🔍 Tester GET Requests</button>
+        <div id="result1" class="result" style="display:none;"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Test 2: Récupérer les commentaires</h2>
+        <button onclick="testGetComments()">🔍 Tester GET Comments</button>
+        <div id="result2" class="result" style="display:none;"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Test 3: Soumettre une demande de test</h2>
+        <button onclick="testSubmitRequest()">📝 Soumettre une demande</button>
+        <div id="result3" class="result" style="display:none;"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Test 4: Soumettre un commentaire de test</h2>
+        <button onclick="testSubmitComment()">💬 Soumettre un commentaire</button>
+        <div id="result4" class="result" style="display:none;"></div>
+    </div>
+
+    <script>
+        const getApiUrl = () => document.getElementById('apiUrl').value;
+
+        function showResult(elementId, message, isError = false) {
+            const element = document.getElementById(elementId);
+            element.style.display = 'block';
+            element.className = 'result ' + (isError ? 'error' : 'success');
+            element.textContent = message;
+        }
+
+        async function testGetRequests() {
+            const resultId = 'result1';
+            showResult(resultId, '⏳ Test en cours...', false);
+
+            try {
+                const url = `${getApiUrl()}?action=getRequests&filter=all`;
+                console.log('Testing URL:', url);
+
+                const response = await fetch(url);
+                const data = await response.json();
+
+                const message = `✅ SUCCÈS!\n\nStatut: ${response.status}\n\nRéponse:\n${JSON.stringify(data, null, 2)}`;
+                showResult(resultId, message, false);
+            } catch (error) {
+                const message = `❌ ERREUR!\n\n${error.message}\n\nDétails: ${error.stack}`;
+                showResult(resultId, message, true);
+            }
+        }
+
+        async function testGetComments() {
+            const resultId = 'result2';
+            showResult(resultId, '⏳ Test en cours...', false);
+
+            try {
+                const url = `${getApiUrl()}?action=getComments&filter=all`;
+                console.log('Testing URL:', url);
+
+                const response = await fetch(url);
+                const data = await response.json();
+
+                const message = `✅ SUCCÈS!\n\nStatut: ${response.status}\n\nRéponse:\n${JSON.stringify(data, null, 2)}`;
+                showResult(resultId, message, false);
+            } catch (error) {
+                const message = `❌ ERREUR!\n\n${error.message}\n\nDétails: ${error.stack}`;
+                showResult(resultId, message, true);
+            }
+        }
+
+        async function testSubmitRequest() {
+            const resultId = 'result3';
+            showResult(resultId, '⏳ Test en cours...', false);
+
+            try {
+                const testData = {
+                    ticketId: 'TEST-' + Date.now(),
+                    name: 'Test User',
+                    email: 'test@example.com',
+                    phone: '+237 6XX XX XX XX',
+                    service: 'Test Service',
+                    message: 'Ceci est un test de la base de données',
+                    serviceType: 'business'
+                };
+
+                const response = await fetch(getApiUrl(), {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        action: 'addRequest',
+                        data: testData
+                    })
+                });
+
+                const data = await response.json();
+
+                const message = `✅ SUCCÈS!\n\nStatut: ${response.status}\n\nRéponse:\n${JSON.stringify(data, null, 2)}\n\nVérifiez votre Google Sheet!`;
+                showResult(resultId, message, false);
+            } catch (error) {
+                const message = `❌ ERREUR!\n\n${error.message}\n\nDétails: ${error.stack}`;
+                showResult(resultId, message, true);
+            }
+        }
+
+        async function testSubmitComment() {
+            const resultId = 'result4';
+            showResult(resultId, '⏳ Test en cours...', false);
+
+            try {
+                const testData = {
+                    name: 'Test User',
+                    email: 'test@example.com',
+                    rating: 5,
+                    comment: 'Excellent test de la base de données!',
+                    serviceType: 'services'
+                };
+
+                const response = await fetch(getApiUrl(), {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        action: 'addComment',
+                        data: testData
+                    })
+                });
+
+                const data = await response.json();
+
+                const message = `✅ SUCCÈS!\n\nStatut: ${response.status}\n\nRéponse:\n${JSON.stringify(data, null, 2)}\n\nVérifiez votre Google Sheet!`;
+                showResult(resultId, message, false);
+            } catch (error) {
+                const message = `❌ ERREUR!\n\n${error.message}\n\nDétails: ${error.stack}`;
+                showResult(resultId, message, true);
+            }
+        }
+
+        // Test automatique au chargement
+        window.addEventListener('load', () => {
+            console.log('Page de test chargée. Prêt à tester l\'API SOGIS!');
+        });
+    </script>
+</body>
+
+</html>

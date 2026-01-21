@@ -3,15 +3,9 @@ import { motion } from 'framer-motion';
 import { Star, Clock } from 'lucide-react';
 import { GlassCard } from './GlassCard';
 import { useLanguage } from '../context/LanguageContext';
+import { fetchComments, type Comment as APIComment } from '../services/googleSheetsAPI';
 
-interface Comment {
-    name: string;
-    email: string;
-    comment: string;
-    rating: number;
-    timestamp: string;
-    validated: boolean;
-}
+
 
 interface CommentsListProps {
     pageType: 'business' | 'services';
@@ -19,15 +13,26 @@ interface CommentsListProps {
 
 export const CommentsList = ({ pageType }: CommentsListProps) => {
     const { t } = useLanguage();
-    const [comments, setComments] = useState<Comment[]>([]);
+    const [comments, setComments] = useState<APIComment[]>([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        // Load validated comments from localStorage
-        const validatedComments = JSON.parse(localStorage.getItem('validatedComments') || '[]');
-        const filteredComments = validatedComments.filter((c: Comment & { pageType: string }) =>
-            c.pageType === pageType && c.validated
-        );
-        setComments(filteredComments);
+        const loadComments = async () => {
+            try {
+                setLoading(true);
+                // Charger les commentaires validés depuis Google Sheets
+                const allComments = await fetchComments('validated');
+                // Filtrer par type de page
+                const filteredComments = allComments.filter(c => c.serviceType === pageType);
+                setComments(filteredComments);
+            } catch (error) {
+                console.error('Erreur lors du chargement des commentaires:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        loadComments();
     }, [pageType]);
 
     const formatDate = (timestamp: string) => {
@@ -38,6 +43,15 @@ export const CommentsList = ({ pageType }: CommentsListProps) => {
             day: 'numeric'
         });
     };
+
+    if (loading) {
+        return (
+            <div className="text-center py-8">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-sogis-business mx-auto"></div>
+                <p className="text-slate-500 mt-2">Chargement des commentaires...</p>
+            </div>
+        );
+    }
 
     if (comments.length === 0) {
         return (

@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Send, CheckCircle2, Mail } from 'lucide-react';
 import { GlassCard } from './GlassCard';
 import { useLanguage } from '../context/LanguageContext';
+import { submitComment } from '../services/googleSheetsAPI';
 
 interface CommentFormProps {
     pageType: 'business' | 'services';
@@ -17,36 +18,37 @@ export const CommentForm = ({ pageType }: CommentFormProps) => {
         rating: 5
     });
     const [submitted, setSubmitted] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        setLoading(true);
+        setError(null);
 
-        // In a real app, this would send to a backend with email validation
-        const commentData = {
-            ...formData,
-            pageType,
-            timestamp: new Date().toISOString(),
-            validated: false,
-            validationToken: generateValidationToken()
-        };
+        try {
+            // Soumettre à Google Sheets
+            await submitComment({
+                name: formData.name,
+                email: formData.email,
+                rating: formData.rating,
+                comment: formData.comment,
+                serviceType: pageType
+            });
 
-        console.log('Comment submitted for validation:', commentData);
-
-        // Store in localStorage temporarily (in production, this would be a backend)
-        const pendingComments = JSON.parse(localStorage.getItem('pendingComments') || '[]');
-        pendingComments.push(commentData);
-        localStorage.setItem('pendingComments', JSON.stringify(pendingComments));
-
-        setSubmitted(true);
-    };
-
-    const generateValidationToken = () => {
-        return Math.random().toString(36).substring(2) + Date.now().toString(36);
+            setSubmitted(true);
+        } catch (err) {
+            console.error('Erreur lors de la soumission du commentaire:', err);
+            setError('Une erreur est survenue. Veuillez réessayer.');
+        } finally {
+            setLoading(false);
+        }
     };
 
     const handleReset = () => {
         setFormData({ name: '', email: '', comment: '', rating: 5 });
         setSubmitted(false);
+        setError(null);
     };
 
     if (submitted) {
@@ -83,6 +85,11 @@ export const CommentForm = ({ pageType }: CommentFormProps) => {
     return (
         <GlassCard>
             <h3 className="text-2xl font-bold text-slate-800 mb-6">{t('comments.form.title')}</h3>
+            {error && (
+                <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4">
+                    {error}
+                </div>
+            )}
             <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="grid md:grid-cols-2 gap-4">
                     <div>
@@ -143,9 +150,22 @@ export const CommentForm = ({ pageType }: CommentFormProps) => {
                     />
                 </div>
 
-                <button type="submit" className="w-full btn-primary flex items-center justify-center gap-2">
-                    <Send size={20} />
-                    {t('comments.form.submit')}
+                <button
+                    type="submit"
+                    disabled={loading}
+                    className="w-full btn-primary flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                    {loading ? (
+                        <>
+                            <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                            <span>Envoi en cours...</span>
+                        </>
+                    ) : (
+                        <>
+                            <Send size={20} />
+                            {t('comments.form.submit')}
+                        </>
+                    )}
                 </button>
             </form>
         </GlassCard>

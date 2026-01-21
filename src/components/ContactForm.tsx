@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Send, CheckCircle2 } from 'lucide-react';
 import { GlassCard } from './GlassCard';
 import { useLanguage } from '../context/LanguageContext';
+import { submitRequest } from '../services/googleSheetsAPI';
 
 interface ContactFormProps {
     serviceType: 'business' | 'services';
@@ -20,6 +21,8 @@ export const ContactForm = ({ serviceType }: ContactFormProps) => {
     });
     const [submitted, setSubmitted] = useState(false);
     const [ticketId, setTicketId] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
 
     const generateTicketId = () => {
         const prefix = serviceType === 'business' ? 'BUS' : 'SRV';
@@ -28,41 +31,40 @@ export const ContactForm = ({ serviceType }: ContactFormProps) => {
         return `SOG-${prefix}-${timestamp}-${random}`;
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        const newTicketId = generateTicketId();
-        setTicketId(newTicketId);
+        setLoading(true);
+        setError(null);
 
-        // Create request object with status tracking
-        const requestData = {
-            ticketId: newTicketId,
-            name: formData.name,
-            email: formData.email,
-            phone: formData.phone,
-            service: formData.service,
-            message: formData.message,
-            serviceType,
-            timestamp: new Date().toISOString(),
-            status: 'pending' as const,
-            statusHistory: [{
-                status: 'pending',
-                timestamp: new Date().toISOString()
-            }]
-        };
+        try {
+            const newTicketId = generateTicketId();
 
-        // Save to localStorage
-        const existingRequests = JSON.parse(localStorage.getItem('projectRequests') || '[]');
-        existingRequests.push(requestData);
-        localStorage.setItem('projectRequests', JSON.stringify(existingRequests));
+            // Soumettre à Google Sheets
+            await submitRequest({
+                ticketId: newTicketId,
+                name: formData.name,
+                email: formData.email,
+                phone: formData.phone,
+                service: formData.service,
+                message: formData.message,
+                serviceType
+            });
 
-        console.log('Request submitted and saved:', requestData);
-        setSubmitted(true);
+            setTicketId(newTicketId);
+            setSubmitted(true);
+        } catch (err) {
+            console.error('Erreur lors de la soumission:', err);
+            setError('Une erreur est survenue. Veuillez réessayer.');
+        } finally {
+            setLoading(false);
+        }
     };
 
     const handleReset = () => {
         setFormData({ name: '', email: '', phone: '', service: '', message: '' });
         setSubmitted(false);
         setTicketId('');
+        setError(null);
     };
 
     // Get service options based on type
@@ -119,6 +121,11 @@ export const ContactForm = ({ serviceType }: ContactFormProps) => {
     return (
         <GlassCard>
             <h3 className="text-2xl font-bold text-slate-800 mb-6">{t('form.title')}</h3>
+            {error && (
+                <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4">
+                    {error}
+                </div>
+            )}
             <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="grid md:grid-cols-2 gap-4">
                     <div>
@@ -183,9 +190,22 @@ export const ContactForm = ({ serviceType }: ContactFormProps) => {
                     />
                 </div>
 
-                <button type="submit" className="w-full btn-primary flex items-center justify-center gap-2">
-                    <Send size={20} />
-                    {t('form.button.submit')}
+                <button
+                    type="submit"
+                    disabled={loading}
+                    className="w-full btn-primary flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                    {loading ? (
+                        <>
+                            <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                            <span>Envoi en cours...</span>
+                        </>
+                    ) : (
+                        <>
+                            <Send size={20} />
+                            {t('form.button.submit')}
+                        </>
+                    )}
                 </button>
             </form>
         </GlassCard>
