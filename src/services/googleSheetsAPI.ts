@@ -109,7 +109,7 @@ export async function submitComment(data: Omit<Comment, 'id' | 'timestamp' | 'st
  */
 export async function fetchRequests(filter: 'all' | 'business' | 'services' = 'all'): Promise<Request[]> {
     try {
-        const url = `${API_URL}?action=getRequests&filter=${filter}`;
+        const url = `${API_URL}?action=getRequests&filter=${filter}&_=${new Date().getTime()}`;
         const response = await fetch(url);
         const result: APIResponse<Request[]> = await response.json();
 
@@ -149,7 +149,7 @@ export async function fetchRequestByTicket(ticketId: string): Promise<Request | 
  */
 export async function fetchComments(filter: 'all' | 'pending' | 'validated' | 'business' | 'services' = 'all'): Promise<Comment[]> {
     try {
-        const url = `${API_URL}?action=getComments&filter=${filter}`;
+        const url = `${API_URL}?action=getComments&filter=${filter}&_=${new Date().getTime()}`;
         const response = await fetch(url);
         const result: APIResponse<Comment[]> = await response.json();
 

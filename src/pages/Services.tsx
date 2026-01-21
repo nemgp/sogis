@@ -20,7 +20,7 @@ export const Services = () => {
             </div>
 
             {/* Contact Form - NOW FIRST */}
-            <div className="space-y-6">
+            <div id="contact-form" className="space-y-6 scroll-mt-24">
                 <h2 className="text-3xl font-heading font-bold text-slate-800">{t('services.contact.title')}</h2>
                 <ContactForm serviceType="services" />
             </div>

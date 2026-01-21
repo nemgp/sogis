@@ -37,7 +37,8 @@ export const Home = () => {
                             <p className="text-lg text-slate-600 mb-8 max-w-md">
                                 {t('home.business.description')}
                             </p>
-                            <Link to="/business" className="flex items-center gap-2 text-sogis-business font-semibold text-lg hover:gap-4 transition-all">
+                            {/* CTA Button */}
+                            <Link to="/business#contact-form" className="btn-primary flex items-center gap-2 w-fit">
                                 {t('home.business.cta')} <ArrowRight size={20} />
                             </Link>
                         </div>
@@ -69,7 +70,8 @@ export const Home = () => {
                             <p className="text-lg text-slate-600 mb-8 max-w-md">
                                 {t('home.services.description')}
                             </p>
-                            <Link to="/services" className="flex items-center gap-2 text-sogis-services font-semibold text-lg hover:gap-4 transition-all">
+                            {/* CTA Button */}
+                            <Link to="/services#contact-form" className="btn-primary flex items-center gap-2 w-fit">
                                 {t('home.services.cta')} <ArrowRight size={20} />
                             </Link>
                         </div>

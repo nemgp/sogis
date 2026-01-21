@@ -387,20 +387,22 @@ export const Admin = () => {
                                         <div className="space-y-4">
                                             {/* Header */}
                                             <div className="flex justify-between items-start flex-wrap gap-3">
-                                                <div className="flex-1 min-w-[200px]">
-                                                    <div className="flex items-center gap-3 mb-2 flex-wrap">
-                                                        <span className="font-mono text-lg font-bold text-sogis-business">
+                                                <div className="flex-1 w-full">
+                                                    <div className="flex items-center gap-2 mb-2 flex-wrap">
+                                                        <span className="font-mono text-lg font-bold text-sogis-business whitespace-nowrap">
                                                             {request.ticketId}
                                                         </span>
-                                                        <span className={`px-3 py-1 rounded-full text-xs font-medium ${request.serviceType === 'business'
-                                                            ? 'bg-sogis-business/10 text-sogis-business border border-sogis-business/30'
-                                                            : 'bg-sogis-services/10 text-sogis-services border border-sogis-services/30'
-                                                            }`}>
-                                                            {request.serviceType === 'business' ? t('nav.business') : t('nav.services')}
-                                                        </span>
-                                                        <span className={`px-3 py-1 rounded-full text-xs font-medium border ${getStatusColor(request.status)}`}>
-                                                            {t(`admin.status.${request.status}`)}
-                                                        </span>
+                                                        <div className="flex gap-2 flex-wrap">
+                                                            <span className={`px-2 py-0.5 rounded-full text-[10px] sm:text-xs font-medium ${request.serviceType === 'business'
+                                                                ? 'bg-sogis-business/10 text-sogis-business border border-sogis-business/30'
+                                                                : 'bg-sogis-services/10 text-sogis-services border border-sogis-services/30'
+                                                                }`}>
+                                                                {request.serviceType === 'business' ? t('nav.business') : t('nav.services')}
+                                                            </span>
+                                                            <span className={`px-2 py-0.5 rounded-full text-[10px] sm:text-xs font-medium border ${getStatusColor(request.status)}`}>
+                                                                {t(`admin.status.${request.status}`)}
+                                                            </span>
+                                                        </div>
                                                     </div>
                                                     <h3 className="text-xl font-bold text-slate-800 mb-1">
                                                         {request.name}
@@ -532,13 +534,13 @@ export const Admin = () => {
                                 >
                                     <GlassCard className="hover:shadow-xl transition-shadow">
                                         <div className="space-y-4">
-                                            <div className="flex justify-between items-start">
-                                                <div className="flex-1">
-                                                    <div className="flex items-center gap-3 mb-2">
+                                            <div className="flex flex-col sm:flex-row justify-between items-start gap-2">
+                                                <div className="flex-1 w-full">
+                                                    <div className="flex items-center gap-2 mb-2 flex-wrap">
                                                         <h3 className="text-xl font-bold text-slate-800">
                                                             {comment.name}
                                                         </h3>
-                                                        <span className={`px-3 py-1 rounded-full text-xs font-medium ${comment.serviceType === 'business'
+                                                        <span className={`px-2 py-0.5 rounded-full text-[10px] sm:text-xs font-medium ${comment.serviceType === 'business'
                                                             ? 'bg-sogis-business/10 text-sogis-business border border-sogis-business/30'
                                                             : 'bg-sogis-services/10 text-sogis-services border border-sogis-services/30'
                                                             }`}>
@@ -546,10 +548,10 @@ export const Admin = () => {
                                                         </span>
                                                     </div>
 
-                                                    <div className="flex items-center gap-4 text-sm text-slate-600">
+                                                    <div className="flex flex-wrap items-center gap-4 text-sm text-slate-600">
                                                         <div className="flex items-center gap-1">
                                                             <Mail size={14} />
-                                                            {comment.email}
+                                                            <span className="truncate max-w-[150px] sm:max-w-none">{comment.email}</span>
                                                         </div>
                                                         <div className="flex items-center gap-1">
                                                             <Clock size={14} />
@@ -558,11 +560,11 @@ export const Admin = () => {
                                                     </div>
                                                 </div>
 
-                                                <div className="flex gap-1">
+                                                <div className="flex gap-1 shrink-0">
                                                     {Array.from({ length: 5 }).map((_, i) => (
                                                         <Star
                                                             key={i}
-                                                            size={20}
+                                                            size={16}
                                                             className={i < comment.rating ? 'fill-yellow-400 text-yellow-400' : 'text-slate-300'}
                                                         />
                                                     ))}
@@ -570,22 +572,22 @@ export const Admin = () => {
                                             </div>
 
                                             <div className="bg-white/60 rounded-lg p-4 border border-white/60">
-                                                <p className="text-slate-700 leading-relaxed">
+                                                <p className="text-slate-700 leading-relaxed text-sm sm:text-base">
                                                     {comment.comment}
                                                 </p>
                                             </div>
 
-                                            <div className="flex gap-3 pt-2">
+                                            <div className="flex flex-col sm:flex-row gap-3 pt-2">
                                                 <button
                                                     onClick={() => handleValidateComment(comment.id)}
-                                                    className="flex-1 btn-primary flex items-center justify-center gap-2 bg-green-500 hover:bg-green-600"
+                                                    className="flex-1 btn-primary flex items-center justify-center gap-2 bg-green-500 hover:bg-green-600 py-3 sm:py-2"
                                                 >
                                                     <CheckCircle2 size={20} />
                                                     {t('admin.action.validate')}
                                                 </button>
                                                 <button
                                                     onClick={() => handleRejectComment(comment.id)}
-                                                    className="flex-1 btn-secondary flex items-center justify-center gap-2 hover:bg-red-50 hover:text-red-600 hover:border-red-300"
+                                                    className="flex-1 btn-secondary flex items-center justify-center gap-2 hover:bg-red-50 hover:text-red-600 hover:border-red-300 py-3 sm:py-2"
                                                 >
                                                     <XCircle size={20} />
                                                     {t('admin.action.reject')}

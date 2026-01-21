@@ -16,7 +16,6 @@ export const GlassCard = ({ children, className, hoverEffect = true }: GlassCard
             viewport={{ once: true }}
             className={clsx(
                 'glass-card p-6 relative overflow-hidden',
-                hoverEffect && 'cursor-pointer',
                 className
             )}
         >

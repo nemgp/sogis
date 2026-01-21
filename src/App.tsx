@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { LanguageProvider } from './context/LanguageContext';
 import { Layout } from './components/Layout';
+import { ScrollToHash } from './components/ScrollToHash';
 import { Home } from './pages/Home';
 import { Business } from './pages/Business';
 import { Services } from './pages/Services';
@@ -12,6 +13,7 @@ function App() {
     return (
         <LanguageProvider>
             <BrowserRouter basename="/sogis">
+                <ScrollToHash />
                 <Layout>
                     <Routes>
                         <Route path="/" element={<Home />} />
