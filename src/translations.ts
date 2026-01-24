@@ -279,6 +279,12 @@ export const translations = {
         'admin.empty.message': 'Tous les commentaires ont été traités !',
         'admin.action.validate': 'Valider',
         'admin.action.reject': 'Rejeter',
+        'admin.action.delete': 'Supprimer',
+        'admin.history.validated': 'Commentaires Validés',
+        'admin.history.rejected': 'Commentaires Refusés',
+        'admin.history.load': 'Charger les commentaires',
+        'admin.history.hide': 'Masquer',
+        'admin.history.empty': 'Aucun commentaire trouvé',
 
         // Admin Panel - Requests
         'admin.requests.title': 'Gestion des Demandes',
@@ -292,7 +298,7 @@ export const translations = {
         'admin.action.accept': 'Accepter',
         'admin.action.start': 'Démarrer',
         'admin.action.complete': 'Finaliser',
-        'admin.action.delete': 'Supprimer',
+
         'admin.requests.empty.title': 'Aucune demande',
         'admin.requests.empty.message': 'Aucune demande pour le moment',
         'admin.requests.filter.all': 'Toutes',
@@ -581,6 +587,12 @@ export const translations = {
         'admin.empty.message': 'All comments have been processed!',
         'admin.action.validate': 'Validate',
         'admin.action.reject': 'Reject',
+        'admin.action.delete': 'Delete',
+        'admin.history.validated': 'Validated Comments',
+        'admin.history.rejected': 'Rejected Comments',
+        'admin.history.load': 'Load comments',
+        'admin.history.hide': 'Hide',
+        'admin.history.empty': 'No comments found',
 
         // Admin Panel - Requests
         'admin.requests.title': 'Request Management',
@@ -594,7 +606,7 @@ export const translations = {
         'admin.action.accept': 'Accept',
         'admin.action.start': 'Start',
         'admin.action.complete': 'Complete',
-        'admin.action.delete': 'Delete',
+
         'admin.requests.empty.title': 'No requests',
         'admin.requests.empty.message': 'No requests at the moment',
         'admin.requests.filter.all': 'All',

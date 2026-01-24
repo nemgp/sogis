@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { Lock, CheckCircle2, XCircle, Mail, Star, Clock, Eye, Phone, MessageSquare, FileText, Briefcase, PartyPopper, Download, Trash2 } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Lock, CheckCircle2, XCircle, Mail, Star, Clock, Eye, Phone, MessageSquare, FileText, Briefcase, PartyPopper, Download, Trash2, ChevronDown, ChevronUp } from 'lucide-react';
 import { GlassCard } from '../components/GlassCard';
 import { useLanguage } from '../context/LanguageContext';
 import {
@@ -26,6 +26,13 @@ export const Admin = () => {
     // Comments state
     const [pendingComments, setPendingComments] = useState<Comment[]>([]);
     const [selectedCommentPage, setSelectedCommentPage] = useState<'all' | 'business' | 'services'>('all');
+
+    // History state
+    const [showValidated, setShowValidated] = useState(false);
+    const [showRejected, setShowRejected] = useState(false);
+    const [validatedComments, setValidatedComments] = useState<Comment[]>([]);
+    const [rejectedComments, setRejectedComments] = useState<Comment[]>([]);
+    const [loadingHistory, setLoadingHistory] = useState(false);
 
     // Requests state
     const [projectRequests, setProjectRequests] = useState<Request[]>([]);
@@ -72,6 +79,24 @@ export const Admin = () => {
         }
     };
 
+    const loadHistoryComments = async () => {
+        setLoadingHistory(true);
+        try {
+            // Load validated comments
+            const validated = await fetchComments('validated');
+            setValidatedComments(validated);
+
+            // Load rejected comments (fetch all and filter client side)
+            const allComments = await fetchComments('rejected' as any);
+            const rejected = allComments.filter(c => c.status === 'rejected');
+            setRejectedComments(rejected);
+        } catch (error) {
+            console.error('Erreur chargement historique:', error);
+        } finally {
+            setLoadingHistory(false);
+        }
+    };
+
     const handleLogin = (e: React.FormEvent) => {
         e.preventDefault();
         if (password === ADMIN_PASSWORD) {
@@ -86,7 +111,9 @@ export const Admin = () => {
     const handleValidateComment = async (commentId: string) => {
         try {
             await apiValidateComment(commentId);
-            await loadPendingComments(); // Refresh
+            await loadPendingComments();
+            // Refresh history if visible? No, let user refresh manually or auto refresh
+            if (showValidated || showRejected) loadHistoryComments();
         } catch (error) {
             console.error('Erreur lors de la validation:', error);
             alert('Erreur lors de la validation du commentaire');
@@ -96,7 +123,8 @@ export const Admin = () => {
     const handleRejectComment = async (commentId: string) => {
         try {
             await apiRejectComment(commentId);
-            await loadPendingComments(); // Refresh
+            await loadPendingComments();
+            if (showValidated || showRejected) loadHistoryComments();
         } catch (error) {
             console.error('Erreur lors du rejet:', error);
             alert('Erreur lors du rejet du commentaire');
@@ -109,18 +137,33 @@ export const Admin = () => {
         }
         try {
             await apiDeleteComment(commentId);
-            await loadPendingComments(); // Refresh
+            await loadPendingComments();
+            if (showValidated || showRejected) await loadHistoryComments();
         } catch (error) {
             console.error('Erreur lors de la suppression:', error);
             alert('Erreur lors de la suppression du commentaire');
         }
     };
 
+    const handleToggleValidated = () => {
+        if (!showValidated && validatedComments.length === 0) {
+            loadHistoryComments();
+        }
+        setShowValidated(!showValidated);
+    };
+
+    const handleToggleRejected = () => {
+        if (!showRejected && rejectedComments.length === 0) {
+            loadHistoryComments();
+        }
+        setShowRejected(!showRejected);
+    };
+
     // Request management functions
     const updateRequestStatus = async (ticketId: string, newStatus: Request['status']) => {
         try {
             await apiUpdateRequestStatus(ticketId, newStatus);
-            await loadProjectRequests(); // Refresh
+            await loadProjectRequests();
         } catch (error) {
             console.error('Erreur lors de la mise à jour:', error);
             alert('Erreur lors de la mise à jour du statut');
@@ -133,7 +176,7 @@ export const Admin = () => {
         }
         try {
             await apiDeleteRequest(ticketId);
-            await loadProjectRequests(); // Refresh
+            await loadProjectRequests();
         } catch (error) {
             console.error('Erreur lors de la suppression:', error);
             alert('Erreur lors de la suppression de la demande');
@@ -141,7 +184,6 @@ export const Admin = () => {
     };
 
     const handleExportExcel = () => {
-        // Créer un CSV des demandes
         const headers = ['Ticket ID', 'Date', 'Nom', 'Email', 'Téléphone', 'Service', 'Message', 'Type', 'Statut'];
         const rows = projectRequests.map(req => [
             req.ticketId,
@@ -620,6 +662,129 @@ export const Admin = () => {
                             ))}
                         </div>
                     )}
+
+                    {/* HISTORY SECTIONS */}
+                    <div className="space-y-4 pt-8 border-t border-slate-200">
+                        <h3 className="text-xl font-bold text-slate-800 text-center mb-6">Historique</h3>
+
+                        {/* VALIDATED COMMENTS SECTION */}
+                        <div className="space-y-2">
+                            <button
+                                onClick={handleToggleValidated}
+                                className="w-full flex items-center justify-between p-4 bg-green-50 rounded-xl border border-green-200 hover:bg-green-100 transition-colors"
+                            >
+                                <div className="flex items-center gap-3">
+                                    <CheckCircle2 className="text-green-600" />
+                                    <span className="font-bold text-green-800">{t('admin.history.validated')}</span>
+                                    {validatedComments.length > 0 && (
+                                        <span className="bg-green-200 text-green-800 text-xs px-2 py-1 rounded-full">{validatedComments.length}</span>
+                                    )}
+                                </div>
+                                {showValidated ? <ChevronUp className="text-green-600" /> : <ChevronDown className="text-green-600" />}
+                            </button>
+
+                            <AnimatePresence>
+                                {showValidated && (
+                                    <motion.div
+                                        initial={{ height: 0, opacity: 0 }}
+                                        animate={{ height: 'auto', opacity: 1 }}
+                                        exit={{ height: 0, opacity: 0 }}
+                                        className="overflow-hidden"
+                                    >
+                                        <div className="p-2 space-y-3">
+                                            {loadingHistory ? (
+                                                <div className="text-center py-4 text-slate-500">Chargement...</div>
+                                            ) : validatedComments.length === 0 ? (
+                                                <div className="text-center py-4 text-slate-500">{t('admin.history.empty')}</div>
+                                            ) : (
+                                                validatedComments.map((comment) => (
+                                                    <GlassCard key={comment.id} className="!bg-green-50/30">
+                                                        <div className="flex justify-between items-start gap-4">
+                                                            <div className="flex-1">
+                                                                <h4 className="font-bold text-slate-800">{comment.name}</h4>
+                                                                <p className="text-sm text-slate-600 mb-2">{comment.comment}</p>
+                                                                <div className="flex gap-2 text-xs text-slate-500">
+                                                                    <span>{formatDate(comment.timestamp)}</span>
+                                                                    <span>•</span>
+                                                                    <span>{comment.serviceType}</span>
+                                                                </div>
+                                                            </div>
+                                                            <button
+                                                                onClick={() => handleDeleteComment(comment.id)}
+                                                                className="text-red-400 hover:text-red-600 p-2"
+                                                                title={t('admin.action.delete')}
+                                                            >
+                                                                <Trash2 size={18} />
+                                                            </button>
+                                                        </div>
+                                                    </GlassCard>
+                                                ))
+                                            )}
+                                        </div>
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
+                        </div>
+
+                        {/* REJECTED COMMENTS SECTION */}
+                        <div className="space-y-2">
+                            <button
+                                onClick={handleToggleRejected}
+                                className="w-full flex items-center justify-between p-4 bg-red-50 rounded-xl border border-red-200 hover:bg-red-100 transition-colors"
+                            >
+                                <div className="flex items-center gap-3">
+                                    <XCircle className="text-red-600" />
+                                    <span className="font-bold text-red-800">{t('admin.history.rejected')}</span>
+                                    {rejectedComments.length > 0 && (
+                                        <span className="bg-red-200 text-red-800 text-xs px-2 py-1 rounded-full">{rejectedComments.length}</span>
+                                    )}
+                                </div>
+                                {showRejected ? <ChevronUp className="text-red-600" /> : <ChevronDown className="text-red-600" />}
+                            </button>
+
+                            <AnimatePresence>
+                                {showRejected && (
+                                    <motion.div
+                                        initial={{ height: 0, opacity: 0 }}
+                                        animate={{ height: 'auto', opacity: 1 }}
+                                        exit={{ height: 0, opacity: 0 }}
+                                        className="overflow-hidden"
+                                    >
+                                        <div className="p-2 space-y-3">
+                                            {loadingHistory ? (
+                                                <div className="text-center py-4 text-slate-500">Chargement...</div>
+                                            ) : rejectedComments.length === 0 ? (
+                                                <div className="text-center py-4 text-slate-500">{t('admin.history.empty')}</div>
+                                            ) : (
+                                                rejectedComments.map((comment) => (
+                                                    <GlassCard key={comment.id} className="!bg-red-50/30">
+                                                        <div className="flex justify-between items-start gap-4">
+                                                            <div className="flex-1">
+                                                                <h4 className="font-bold text-slate-800">{comment.name}</h4>
+                                                                <p className="text-sm text-slate-600 mb-2">{comment.comment}</p>
+                                                                <div className="flex gap-2 text-xs text-slate-500">
+                                                                    <span>{formatDate(comment.timestamp)}</span>
+                                                                    <span>•</span>
+                                                                    <span>{comment.serviceType}</span>
+                                                                </div>
+                                                            </div>
+                                                            <button
+                                                                onClick={() => handleDeleteComment(comment.id)}
+                                                                className="text-red-400 hover:text-red-600 p-2"
+                                                                title={t('admin.action.delete')}
+                                                            >
+                                                                <Trash2 size={18} />
+                                                            </button>
+                                                        </div>
+                                                    </GlassCard>
+                                                ))
+                                            )}
+                                        </div>
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
+                        </div>
+                    </div>
                 </div>
             )}
         </div>
