@@ -1,0 +1,32 @@
+--- a/src/services/googleSheetsAPI.ts
++++ b/src/services/googleSheetsAPI.ts
+@@ -259,6 +259,28 @@ export async function rejectComment(id: string): Promise<void> {
+     }
+ }
+ 
++/**
++ * Supprimer définitivement un commentaire
++ */
++export async function deleteComment(id: string): Promise<void> {
++    try {
++        const params = new URLSearchParams({
++            action: 'deleteComment',
++            id: id,
++            _: new Date().getTime().toString()
++        });
++
++        const response = await fetch(`${API_URL}?${params.toString()}`);
++        const result: APIResponse<any> = await response.json();
++
++        if (!result.success) {
++            throw new Error(result.message);
++        }
++    } catch (error) {
++        console.error('Erreur lors de la suppression du commentaire:', error);
++        throw error;
++    }
++}
++
+ /**
+  * Exporter les demandes en Excel
+  * Cette fonction télécharge directement le Google Sheet en format Excel

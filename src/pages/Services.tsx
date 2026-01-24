@@ -148,7 +148,7 @@ export const Services = () => {
                 <h2 className="text-3xl font-heading font-bold text-slate-800 text-center">{t('comments.list.title')}</h2>
                 <div className="grid md:grid-cols-2 gap-8">
                     <div>
-                        <CommentsList pageType="services" />
+                        <CommentsList serviceType="services" />
                     </div>
                     <div>
                         <CommentForm pageType="services" />

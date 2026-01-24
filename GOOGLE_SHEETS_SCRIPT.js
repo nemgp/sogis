@@ -76,6 +76,27 @@ function doGet(e) {
             case 'getRequestByTicket':
                 result = getRequestByTicket(e.parameter.ticketId);
                 break;
+            case 'addRequest':
+                result = addRequest(e.parameter);
+                break;
+            case 'addComment':
+                result = addComment(e.parameter);
+                break;
+            case 'updateRequestStatus':
+                result = updateRequestStatus(e.parameter.ticketId, e.parameter.status);
+                break;
+            case 'deleteRequest':
+                result = deleteRequest(e.parameter.ticketId);
+                break;
+            case 'validateComment':
+                result = validateComment(e.parameter.id);
+                break;
+            case 'rejectComment':
+                result = rejectComment(e.parameter.id);
+                break;
+            case 'deleteComment':
+                result = deleteComment(e.parameter.id);
+                break;
             default:
                 return createResponse(false, 'Action inconnue');
         }
@@ -89,25 +110,25 @@ function doGet(e) {
 /**
  * Ajouter une demande
  */
-function addRequest(data) {
+function addRequest(params) {
     const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(SHEET_REQUESTS);
 
     const row = [
-        data.ticketId,
+        params.ticketId,
         new Date().toISOString(),
-        data.name,
-        data.email,
-        data.phone,
-        data.service,
-        data.message,
-        data.serviceType,
+        params.name,
+        params.email,
+        params.phone,
+        params.service,
+        params.message,
+        params.serviceType,
         'pending',
         JSON.stringify([{ status: 'pending', timestamp: new Date().toISOString() }])
     ];
 
     sheet.appendRow(row);
 
-    return { ticketId: data.ticketId };
+    return { ticketId: params.ticketId };
 }
 
 /**
@@ -221,7 +242,7 @@ function deleteRequest(ticketId) {
 /**
  * Ajouter un commentaire
  */
-function addComment(data) {
+function addComment(params) {
     const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(SHEET_COMMENTS);
 
     // Générer un ID unique
@@ -230,11 +251,11 @@ function addComment(data) {
     const row = [
         id,
         new Date().toISOString(),
-        data.name,
-        data.email,
-        data.rating,
-        data.comment,
-        data.serviceType,
+        params.name,
+        params.email,
+        parseInt(params.rating),
+        params.comment,
+        params.serviceType,
         'pending'
     ];
 
@@ -284,7 +305,7 @@ function validateComment(id) {
 
     for (let i = 1; i < data.length; i++) {
         const row = data[i];
-        if (row[0] === id) {
+        if (row[0] == id) {  // Use loose equality like in deleteRequest
             sheet.getRange(i + 1, 8).setValue('validated');
             return { success: true };
         }
@@ -294,7 +315,7 @@ function validateComment(id) {
 }
 
 /**
- * Rejeter un commentaire
+ * Rejeter un commentaire (change le statut sans supprimer)
  */
 function rejectComment(id) {
     const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(SHEET_COMMENTS);
@@ -302,7 +323,26 @@ function rejectComment(id) {
 
     for (let i = 1; i < data.length; i++) {
         const row = data[i];
-        if (row[0] === id) {
+        if (row[0] == id) {
+            // Change status to 'rejected' instead of deleting
+            sheet.getRange(i + 1, 8).setValue('rejected');
+            return { success: true };
+        }
+    }
+
+    return { success: false, error: 'Commentaire non trouvé' };
+}
+
+/**
+ * Supprimer définitivement un commentaire
+ */
+function deleteComment(id) {
+    const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(SHEET_COMMENTS);
+    const data = sheet.getDataRange().getValues();
+
+    for (let i = 1; i < data.length; i++) {
+        const row = data[i];
+        if (row[0] == id) {
             sheet.deleteRow(i + 1);
             return { success: true };
         }

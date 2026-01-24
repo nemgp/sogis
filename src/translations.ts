@@ -245,6 +245,9 @@ export const translations = {
         'comments.success.new': 'Nouveau commentaire',
         'comments.list.empty': 'Aucun commentaire pour le moment. Soyez le premier à partager votre expérience !',
         'comments.list.title': 'Avis de nos clients',
+        'comments.empty': 'Aucun commentaire pour le moment',
+        'comments.title': 'Avis de nos clients',
+        'comments.subtitle': 'Découvrez ce que nos clients pensent de nos services',
 
         // Tracking Page
         'tracking.title': 'Suivi de Dossier',
@@ -544,6 +547,9 @@ export const translations = {
         'comments.success.new': 'New comment',
         'comments.list.empty': 'No comments yet. Be the first to share your experience!',
         'comments.list.title': 'Customer reviews',
+        'comments.empty': 'No reviews yet',
+        'comments.title': 'Customer reviews',
+        'comments.subtitle': 'See what our customers think about our services',
 
         // Tracking Page
         'tracking.title': 'File Tracking',

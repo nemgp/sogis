@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Lock, CheckCircle2, XCircle, Mail, Star, Clock, Eye, Phone, MessageSquare, FileText, Briefcase, PartyPopper, Download } from 'lucide-react';
+import { Lock, CheckCircle2, XCircle, Mail, Star, Clock, Eye, Phone, MessageSquare, FileText, Briefcase, PartyPopper, Download, Trash2 } from 'lucide-react';
 import { GlassCard } from '../components/GlassCard';
 import { useLanguage } from '../context/LanguageContext';
 import {
@@ -10,6 +10,7 @@ import {
     deleteRequest as apiDeleteRequest,
     validateComment as apiValidateComment,
     rejectComment as apiRejectComment,
+    deleteComment as apiDeleteComment,
     type Request,
     type Comment
 } from '../services/googleSheetsAPI';
@@ -99,6 +100,19 @@ export const Admin = () => {
         } catch (error) {
             console.error('Erreur lors du rejet:', error);
             alert('Erreur lors du rejet du commentaire');
+        }
+    };
+
+    const handleDeleteComment = async (commentId: string) => {
+        if (!confirm('Êtes-vous sûr de vouloir supprimer définitivement ce commentaire ?')) {
+            return;
+        }
+        try {
+            await apiDeleteComment(commentId);
+            await loadPendingComments(); // Refresh
+        } catch (error) {
+            console.error('Erreur lors de la suppression:', error);
+            alert('Erreur lors de la suppression du commentaire');
         }
     };
 
@@ -591,6 +605,13 @@ export const Admin = () => {
                                                 >
                                                     <XCircle size={20} />
                                                     {t('admin.action.reject')}
+                                                </button>
+                                                <button
+                                                    onClick={() => handleDeleteComment(comment.id)}
+                                                    className="flex-1 btn-secondary flex items-center justify-center gap-2 hover:bg-red-50 hover:text-red-600 hover:border-red-300 py-3 sm:py-2"
+                                                >
+                                                    <Trash2 size={20} />
+                                                    {t('admin.action.delete')}
                                                 </button>
                                             </div>
                                         </div>
