@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { Building2, PartyPopper, ArrowRight, MapPin, Phone, Mail, Users, Settings } from 'lucide-react';
 import { GlassCard } from '../components/GlassCard';
 import { useLanguage } from '../context/LanguageContext';
+import logo from '../assets/logo.png';
 
 export const Home = () => {
     const { t } = useLanguage();
@@ -457,9 +458,9 @@ export const Home = () => {
                 {/* SOGIS Logo at Bottom Left */}
                 <div className="flex-1">
                     <img
-                        src="/sogis/sogis-logo.png"
+                        src={logo}
                         alt="SOGIS - Business & Services"
-                        className="h-16 w-auto opacity-90 hover:opacity-100 transition-opacity"
+                        className="h-16 w-auto opacity-90 hover:opacity-100 transition-opacity rounded-lg"
                     />
                 </div>
 

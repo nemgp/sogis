@@ -4,6 +4,7 @@ import { Menu, X, Briefcase, HeartHandshake, Home, Search, Languages } from 'luc
 import clsx from 'clsx';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '../context/LanguageContext';
+import logo from '../assets/logo.png';
 
 export const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -26,7 +27,7 @@ export const Navbar = () => {
                 {/* Logo */}
                 <Link to="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
                     <img
-                        src="/sogis/sogis-navbar-logo.png"
+                        src={logo}
                         alt="SOGIS"
                         className="h-12 w-auto rounded-lg"
                     />
