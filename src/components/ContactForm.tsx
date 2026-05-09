@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Send, CheckCircle2 } from 'lucide-react';
 import { GlassCard } from './GlassCard';
 import { useLanguage } from '../context/LanguageContext';
-import { submitRequest } from '../services/googleSheetsAPI';
+import { submitRequest } from '../services/api';
 
 interface ContactFormProps {
     serviceType: 'business' | 'services';
@@ -143,6 +143,8 @@ export const ContactForm = ({ serviceType }: ContactFormProps) => {
                         <input
                             type="email"
                             required
+                            pattern="[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$"
+                            title="Veuillez entrer une adresse email valide (ex: contact@domaine.com)"
                             value={formData.email}
                             onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                             className="w-full rounded-lg bg-white/50 border border-white/60 px-4 py-2 text-slate-700 focus:outline-none focus:ring-2 focus:ring-sogis-business/50"
@@ -182,6 +184,7 @@ export const ContactForm = ({ serviceType }: ContactFormProps) => {
                     <label className="block text-sm font-medium text-slate-700 mb-1">{t('form.label.message')} <span className="text-red-500">*</span></label>
                     <textarea
                         required
+                        minLength={20}
                         rows={4}
                         value={formData.message}
                         onChange={(e) => setFormData({ ...formData, message: e.target.value })}

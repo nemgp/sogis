@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { Send, CheckCircle2, Mail } from 'lucide-react';
 import { GlassCard } from './GlassCard';
 import { useLanguage } from '../context/LanguageContext';
-import { submitComment } from '../services/googleSheetsAPI';
+import { submitComment } from '../services/api';
 
 interface CommentFormProps {
     pageType: 'business' | 'services';

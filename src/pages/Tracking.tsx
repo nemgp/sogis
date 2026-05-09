@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { Search, CheckCircle, Clock, AlertCircle } from 'lucide-react';
 import { GlassCard } from '../components/GlassCard';
 import { useLanguage } from '../context/LanguageContext';
-import { fetchRequestByTicket, type Request } from '../services/googleSheetsAPI';
+import { fetchRequestByTicket, type Request } from '../services/api';
 
 export const Tracking = () => {
     const { t } = useLanguage();
@@ -22,6 +22,7 @@ export const Tracking = () => {
 
         try {
             setLoading(true);
+            setSearchResult(null);
             const result = await fetchRequestByTicket(trackingId.trim());
 
             if (result) {
@@ -85,7 +86,23 @@ export const Tracking = () => {
                     </div>
                 </form>
 
-                {searchResult && (
+                {loading && !searchResult && (
+                    <div className="mt-8 pt-8 border-t border-white/40 animate-pulse space-y-6">
+                        <div className="flex justify-between items-start">
+                            <div className="space-y-2">
+                                <div className="h-8 bg-slate-200/60 rounded-lg w-48"></div>
+                                <div className="h-4 bg-slate-200/60 rounded w-32"></div>
+                            </div>
+                            <div className="h-8 bg-slate-200/60 rounded-full w-24"></div>
+                        </div>
+                        <div className="space-y-4">
+                            <div className="h-5 bg-slate-200/50 rounded w-40"></div>
+                            <div className="h-12 bg-slate-200/50 rounded w-full"></div>
+                        </div>
+                    </div>
+                )}
+
+                {searchResult && !loading && (
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}

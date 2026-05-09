@@ -102,6 +102,15 @@ def add_divider():
     p.runs[0].font.size = Pt(8)
     set_para_spacing(p, before=4, after=4)
 
+def add_image(path, width=Cm(16)):
+    import os
+    if os.path.exists(path):
+        p = doc.add_paragraph()
+        p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        r = p.add_run()
+        r.add_picture(path, width=width)
+        set_para_spacing(p, before=10, after=10)
+
 def shade_cell(cell, color_hex):
     tc = cell._tc
     tcPr = tc.get_or_add_tcPr()
@@ -239,6 +248,8 @@ add_body(
     'de déposer des avis, et aux administrateurs de gérer l\'ensemble de ces interactions depuis '
     'un tableau de bord sécurisé.'
 )
+
+add_image(r"C:\Users\mngue\.gemini\antigravity\brain\affd3609-bcc6-42ae-9861-d42653ce682a\full_page_with_logo_1778364203261.png")
 
 add_heading('Objectifs de la plateforme', level=2, color=BLEU)
 add_bullet('Offrir un point d\'entrée unique pour toutes les demandes clients')
@@ -456,12 +467,16 @@ add_body(
     italic=True
 )
 
+add_image(r"C:\Users\mngue\.gemini\antigravity\brain\affd3609-bcc6-42ae-9861-d42653ce682a\admin_login_page_1778363790446.png")
+
 # 5.2
 add_heading('5.2 Tableau de bord — Gestion des demandes', level=2, color=BLEU)
 add_body(
     'L\'onglet "Demandes" est l\'onglet par défaut du tableau de bord. '
     'Il liste toutes les demandes clients reçues, avec leurs informations complètes.'
 )
+
+add_image(r"C:\Users\mngue\.gemini\antigravity\brain\affd3609-bcc6-42ae-9861-d42653ce682a\admin_dashboard_after_login_1778363910160.png")
 
 add_body('Filtres disponibles :', bold=True)
 add_bullet('Par statut : Toutes / En attente / Accepté / En cours / Finalisé')

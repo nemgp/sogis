@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { Star, User } from 'lucide-react';
 import { GlassCard } from './GlassCard';
 import { useLanguage } from '../context/LanguageContext';
-import { fetchComments, type Comment } from '../services/googleSheetsAPI';
+import { fetchComments, type Comment } from '../services/api';
 
 interface CommentsListProps {
     serviceType: 'business' | 'services';

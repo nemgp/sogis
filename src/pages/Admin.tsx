@@ -14,7 +14,7 @@ import {
     deleteComment as apiDeleteComment,
     type Request,
     type Comment
-} from '../services/googleSheetsAPI';
+} from '../services/api';
 
 export const Admin = () => {
     const { t } = useLanguage();
