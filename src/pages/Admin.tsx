@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Lock, CheckCircle2, XCircle, Mail, Star, Clock, Eye, Phone, MessageSquare, FileText, Briefcase, PartyPopper, Download, Trash2, ChevronDown, ChevronUp } from 'lucide-react';
+import { CheckCircle2, XCircle, Mail, Star, Clock, Eye, Phone, MessageSquare, FileText, Briefcase, PartyPopper, Trash2, ChevronDown, ChevronUp, LogOut } from 'lucide-react';
 import { GlassCard } from '../components/GlassCard';
 import { useLanguage } from '../context/LanguageContext';
+import { supabase } from '../lib/supabase';
 import {
     fetchRequests,
     fetchComments,
@@ -17,9 +18,6 @@ import {
 
 export const Admin = () => {
     const { t } = useLanguage();
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
-    const [password, setPassword] = useState('');
-    const [error, setError] = useState('');
     const [activeTab, setActiveTab] = useState<'comments' | 'requests'>('requests');
     const [loading, setLoading] = useState(false);
 
@@ -39,13 +37,9 @@ export const Admin = () => {
     const [selectedStatus, setSelectedStatus] = useState<'all' | 'pending' | 'accepted' | 'inprogress' | 'completed'>('all');
     const [selectedRequestType, setSelectedRequestType] = useState<'all' | 'business' | 'services'>('all');
 
-    const ADMIN_PASSWORD = 'sogis2026';
-
     useEffect(() => {
-        if (isAuthenticated) {
-            loadData();
-        }
-    }, [isAuthenticated]);
+        loadData();
+    }, []);
 
     const loadData = async () => {
         setLoading(true);
@@ -97,14 +91,8 @@ export const Admin = () => {
         }
     };
 
-    const handleLogin = (e: React.FormEvent) => {
-        e.preventDefault();
-        if (password === ADMIN_PASSWORD) {
-            setIsAuthenticated(true);
-            setError('');
-        } else {
-            setError(t('admin.error.password'));
-        }
+    const handleLogout = async () => {
+        await supabase.auth.signOut();
     };
 
     // Comment management functions
@@ -190,7 +178,7 @@ export const Admin = () => {
             new Date(req.timestamp).toLocaleDateString('fr-FR'),
             req.name,
             req.email,
-            req.phone,
+            req.phone ?? '',
             req.service,
             req.message,
             req.serviceType,
@@ -244,60 +232,6 @@ export const Admin = () => {
         return statusMatch && typeMatch;
     });
 
-    if (!isAuthenticated) {
-        return (
-            <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-blue-50">
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="w-full max-w-md"
-                >
-                    <GlassCard className="text-center space-y-6">
-                        <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto">
-                            <Lock className="w-10 h-10 text-white" />
-                        </div>
-
-                        <div>
-                            <h1 className="text-3xl font-heading font-bold text-slate-800 mb-2">
-                                {t('admin.title')}
-                            </h1>
-                            <p className="text-slate-600">{t('admin.subtitle')}</p>
-                        </div>
-
-                        <form onSubmit={handleLogin} className="space-y-4">
-                            <div>
-                                <label className="block text-sm font-medium text-slate-700 mb-2 text-left">
-                                    {t('admin.password')}
-                                </label>
-                                <input
-                                    type="password"
-                                    value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
-                                    className="w-full rounded-lg bg-white/50 border border-white/60 px-4 py-3 text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500/50"
-                                    placeholder="••••••••"
-                                    autoFocus
-                                />
-                            </div>
-
-                            {error && (
-                                <motion.div
-                                    initial={{ opacity: 0 }}
-                                    animate={{ opacity: 1 }}
-                                    className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm"
-                                >
-                                    {error}
-                                </motion.div>
-                            )}
-
-                            <button type="submit" className="w-full btn-primary">
-                                {t('admin.login')}
-                            </button>
-                        </form>
-                    </GlassCard>
-                </motion.div>
-            </div>
-        );
-    }
 
     if (loading) {
         return (
@@ -312,7 +246,15 @@ export const Admin = () => {
 
     return (
         <div className="space-y-8">
-            <div className="text-center space-y-4">
+            <div className="text-center space-y-4 relative">
+                <button
+                    onClick={handleLogout}
+                    className="absolute right-0 top-0 flex items-center gap-2 px-4 py-2 rounded-xl bg-white/60 border border-slate-200/60 text-slate-600 hover:bg-red-50 hover:text-red-600 hover:border-red-300 transition-all text-sm font-medium"
+                    title="Déconnexion"
+                >
+                    <LogOut className="w-4 h-4" />
+                    Déconnexion
+                </button>
                 <h1 className="text-5xl font-heading font-bold text-slate-800">
                     {t('admin.dashboard.title')}
                 </h1>
@@ -355,7 +297,7 @@ export const Admin = () => {
                             onClick={handleExportExcel}
                             className="btn-primary bg-green-600 hover:bg-green-700 flex items-center gap-2"
                         >
-                            <Download size={20} />
+                            <FileText size={20} />
                             Export Excel (CSV)
                         </button>
                     </div>

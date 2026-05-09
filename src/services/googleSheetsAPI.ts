@@ -1,15 +1,13 @@
 /**
- * Service API pour interagir avec Google Sheets
- * 
- * Ce service gère toutes les communications avec l'API Google Sheets
- * déployée via Apps Script
+ * Service API pour interagir avec Supabase
+ * Remplace l'ancienne intégration Google Sheets/Apps Script
  */
 
-const API_URL = import.meta.env.VITE_GOOGLE_SHEETS_API_URL;
+import { supabase } from '../lib/supabase';
 
-if (!API_URL) {
-    console.warn('⚠️ VITE_GOOGLE_SHEETS_API_URL n\'est pas défini dans .env');
-}
+// ─────────────────────────────────────────────
+// Types (interface identique à l'ancienne API)
+// ─────────────────────────────────────────────
 
 export interface Request {
     ticketId: string;
@@ -38,274 +36,212 @@ export interface Comment {
     status: 'pending' | 'validated' | 'rejected';
 }
 
-interface APIResponse<T> {
-    success: boolean;
-    message: string;
-    data: T | null;
+// ─────────────────────────────────────────────
+// Helpers de mapping DB ↔ TypeScript
+// ─────────────────────────────────────────────
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function mapRequest(row: any): Request {
+    return {
+        ticketId: row.ticket_id,
+        timestamp: row.created_at,
+        name: row.name,
+        email: row.email,
+        phone: row.phone ?? '',
+        service: row.service,
+        message: row.message,
+        serviceType: row.service_type,
+        status: row.status,
+        statusHistory: row.status_history ?? [],
+    };
 }
 
-/**
- * Soumettre une nouvelle demande
- */
-export async function submitRequest(data: Omit<Request, 'timestamp' | 'status' | 'statusHistory'>): Promise<{ ticketId: string }> {
-    try {
-        // Utiliser GET avec paramètres URL pour contourner CORS
-        const params = new URLSearchParams({
-            action: 'addRequest',
-            ticketId: data.ticketId,
-            name: data.name,
-            email: data.email,
-            phone: data.phone,
-            service: data.service,
-            message: data.message,
-            serviceType: data.serviceType
-        });
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function mapComment(row: any): Comment {
+    return {
+        id: row.id,
+        timestamp: row.created_at,
+        name: row.name,
+        email: row.email,
+        rating: row.rating,
+        comment: row.comment,
+        serviceType: row.service_type,
+        status: row.status,
+    };
+}
 
-        const response = await fetch(`${API_URL}?${params.toString()}`);
-        const result: APIResponse<{ ticketId: string }> = await response.json();
+// ─────────────────────────────────────────────
+// Demandes
+// ─────────────────────────────────────────────
 
-        if (!result.success) {
-            throw new Error(result.message);
-        }
+/** Soumettre une nouvelle demande */
+export async function submitRequest(
+    data: Omit<Request, 'timestamp' | 'status' | 'statusHistory'>
+): Promise<{ ticketId: string }> {
+    const { error } = await supabase.from('requests').insert({
+        ticket_id: data.ticketId,
+        name: data.name,
+        email: data.email,
+        phone: data.phone,
+        service: data.service,
+        message: data.message,
+        service_type: data.serviceType,
+        status: 'pending',
+        status_history: [],
+    });
 
-        return result.data!;
-    } catch (error) {
-        console.error('Erreur lors de la soumission de la demande:', error);
-        throw error;
+    if (error) throw new Error(error.message);
+    return { ticketId: data.ticketId };
+}
+
+/** Récupérer toutes les demandes */
+export async function fetchRequests(
+    filter: 'all' | 'business' | 'services' = 'all'
+): Promise<Request[]> {
+    let query = supabase
+        .from('requests')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+    if (filter !== 'all') {
+        query = query.eq('service_type', filter);
     }
+
+    const { data, error } = await query;
+    if (error) throw new Error(error.message);
+    return (data ?? []).map(mapRequest);
 }
 
-/**
- * Soumettre un nouveau commentaire
- */
-export async function submitComment(data: Omit<Comment, 'id' | 'timestamp' | 'status'>): Promise<{ id: string }> {
-    try {
-        // Utiliser GET avec paramètres URL pour contourner CORS
-        const params = new URLSearchParams({
-            action: 'addComment',
-            name: data.name,
-            email: data.email,
-            rating: data.rating.toString(),
-            comment: data.comment,
-            serviceType: data.serviceType
-        });
-
-        const response = await fetch(`${API_URL}?${params.toString()}`);
-        const result: APIResponse<{ id: string }> = await response.json();
-
-        if (!result.success) {
-            throw new Error(result.message);
-        }
-
-        return result.data!;
-    } catch (error) {
-        console.error('Erreur lors de la soumission du commentaire:', error);
-        throw error;
-    }
-}
-
-/**
- * Récupérer toutes les demandes
- */
-export async function fetchRequests(filter: 'all' | 'business' | 'services' = 'all'): Promise<Request[]> {
-    try {
-        const url = `${API_URL}?action=getRequests&filter=${filter}&_=${new Date().getTime()}`;
-        const response = await fetch(url);
-        const result: APIResponse<Request[]> = await response.json();
-
-        if (!result.success) {
-            throw new Error(result.message);
-        }
-
-        return result.data || [];
-    } catch (error) {
-        console.error('Erreur lors de la récupération des demandes:', error);
-        throw error;
-    }
-}
-
-/**
- * Récupérer une demande par ticket ID
- */
+/** Récupérer une demande par ticket ID */
 export async function fetchRequestByTicket(ticketId: string): Promise<Request | null> {
-    try {
-        const url = `${API_URL}?action=getRequestByTicket&ticketId=${encodeURIComponent(ticketId)}`;
-        const response = await fetch(url);
-        const result: APIResponse<Request> = await response.json();
+    const { data, error } = await supabase
+        .from('requests')
+        .select('*')
+        .eq('ticket_id', ticketId)
+        .maybeSingle();
 
-        if (!result.success) {
-            throw new Error(result.message);
-        }
-
-        return result.data;
-    } catch (error) {
-        console.error('Erreur lors de la récupération de la demande:', error);
-        throw error;
-    }
+    if (error) throw new Error(error.message);
+    return data ? mapRequest(data) : null;
 }
 
-/**
- * Récupérer tous les commentaires
- */
-export async function fetchComments(filter: 'all' | 'pending' | 'validated' | 'business' | 'services' = 'all'): Promise<Comment[]> {
-    try {
-        const url = `${API_URL}?action=getComments&filter=${filter}&_=${new Date().getTime()}`;
-        const response = await fetch(url);
-        const result: APIResponse<Comment[]> = await response.json();
+/** Mettre à jour le statut d'une demande */
+export async function updateRequestStatus(
+    ticketId: string,
+    status: Request['status']
+): Promise<void> {
+    // Récupérer l'historique actuel
+    const { data: current, error: fetchError } = await supabase
+        .from('requests')
+        .select('status_history')
+        .eq('ticket_id', ticketId)
+        .single();
 
-        if (!result.success) {
-            throw new Error(result.message);
-        }
+    if (fetchError) throw new Error(fetchError.message);
 
-        return result.data || [];
-    } catch (error) {
-        console.error('Erreur lors de la récupération des commentaires:', error);
-        throw error;
-    }
+    const newHistory = [
+        ...(current?.status_history ?? []),
+        { status, timestamp: new Date().toISOString() },
+    ];
+
+    const { error } = await supabase
+        .from('requests')
+        .update({ status, status_history: newHistory })
+        .eq('ticket_id', ticketId);
+
+    if (error) throw new Error(error.message);
 }
 
-/**
- * Mettre à jour le statut d'une demande
- */
-export async function updateRequestStatus(ticketId: string, status: Request['status']): Promise<void> {
-    try {
-        // Utiliser GET avec paramètres URL pour contourner CORS
-        const params = new URLSearchParams({
-            action: 'updateRequestStatus',
-            ticketId: ticketId,
-            status: status
-        });
-
-        const response = await fetch(`${API_URL}?${params.toString()}`);
-        const result: APIResponse<any> = await response.json();
-
-        if (!result.success) {
-            throw new Error(result.message);
-        }
-    } catch (error) {
-        console.error('Erreur lors de la mise à jour du statut:', error);
-        throw error;
-    }
-}
-
-/**
- * Supprimer une demande
- */
+/** Supprimer une demande */
 export async function deleteRequest(ticketId: string): Promise<void> {
-    try {
-        // Utiliser GET avec paramètres URL pour contourner CORS
-        const params = new URLSearchParams({
-            action: 'deleteRequest',
-            ticketId: ticketId
-        });
+    const { error } = await supabase
+        .from('requests')
+        .delete()
+        .eq('ticket_id', ticketId);
 
-        const response = await fetch(`${API_URL}?${params.toString()}`);
-        const result: APIResponse<any> = await response.json();
-
-        if (!result.success) {
-            throw new Error(result.message);
-        }
-    } catch (error) {
-        console.error('Erreur lors de la suppression de la demande:', error);
-        throw error;
-    }
+    if (error) throw new Error(error.message);
 }
 
-/**
- * Valider un commentaire
- */
+// ─────────────────────────────────────────────
+// Commentaires
+// ─────────────────────────────────────────────
+
+/** Soumettre un nouveau commentaire */
+export async function submitComment(
+    data: Omit<Comment, 'id' | 'timestamp' | 'status'>
+): Promise<{ id: string }> {
+    const { data: inserted, error } = await supabase
+        .from('comments')
+        .insert({
+            name: data.name,
+            email: data.email,
+            rating: data.rating,
+            comment: data.comment,
+            service_type: data.serviceType,
+            status: 'pending',
+        })
+        .select('id')
+        .single();
+
+    if (error) throw new Error(error.message);
+    return { id: inserted.id };
+}
+
+/** Récupérer les commentaires avec filtre */
+export async function fetchComments(
+    filter: 'all' | 'pending' | 'validated' | 'rejected' | 'business' | 'services' = 'all'
+): Promise<Comment[]> {
+    let query = supabase
+        .from('comments')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+    if (filter === 'pending' || filter === 'validated' || filter === 'rejected') {
+        query = query.eq('status', filter);
+    } else if (filter === 'business' || filter === 'services') {
+        query = query.eq('service_type', filter);
+    }
+
+    const { data, error } = await query;
+    if (error) throw new Error(error.message);
+    return (data ?? []).map(mapComment);
+}
+
+/** Valider un commentaire */
 export async function validateComment(id: string): Promise<void> {
-    try {
-        // Utiliser GET avec paramètres URL pour contourner CORS
-        const params = new URLSearchParams({
-            action: 'validateComment',
-            id: id,
-            _: new Date().getTime().toString() // Cache busting
-        });
+    const { error } = await supabase
+        .from('comments')
+        .update({ status: 'validated' })
+        .eq('id', id);
 
-        const response = await fetch(`${API_URL}?${params.toString()}`);
-        const result: APIResponse<any> = await response.json();
-
-        if (!result.success) {
-            throw new Error(result.message);
-        }
-    } catch (error) {
-        console.error('Erreur lors de la validation du commentaire:', error);
-        throw error;
-    }
+    if (error) throw new Error(error.message);
 }
 
-/**
- * Rejeter un commentaire
- */
+/** Rejeter un commentaire */
 export async function rejectComment(id: string): Promise<void> {
-    try {
-        // Utiliser GET avec paramètres URL pour contourner CORS
-        const params = new URLSearchParams({
-            action: 'rejectComment',
-            id: id,
-            _: new Date().getTime().toString() // Cache busting
-        });
+    const { error } = await supabase
+        .from('comments')
+        .update({ status: 'rejected' })
+        .eq('id', id);
 
-        const response = await fetch(`${API_URL}?${params.toString()}`);
-        const result: APIResponse<any> = await response.json();
-
-        if (!result.success) {
-            throw new Error(result.message);
-        }
-    } catch (error) {
-        console.error('Erreur lors du rejet du commentaire:', error);
-        throw error;
-    }
+    if (error) throw new Error(error.message);
 }
 
-/**
- * Supprimer définitivement un commentaire
- */
+/** Supprimer définitivement un commentaire */
 export async function deleteComment(id: string): Promise<void> {
-    try {
-        const params = new URLSearchParams({
-            action: 'deleteComment',
-            id: id,
-            _: new Date().getTime().toString()
-        });
+    const { error } = await supabase
+        .from('comments')
+        .delete()
+        .eq('id', id);
 
-        const response = await fetch(`${API_URL}?${params.toString()}`);
-        const result: APIResponse<any> = await response.json();
-
-        if (!result.success) {
-            throw new Error(result.message);
-        }
-    } catch (error) {
-        console.error('Erreur lors de la suppression du commentaire:', error);
-        throw error;
-    }
+    if (error) throw new Error(error.message);
 }
 
+// ─────────────────────────────────────────────
+// Export CSV
+// ─────────────────────────────────────────────
 
-/**
- * Exporter les demandes en Excel
- * Cette fonction télécharge directement le Google Sheet en format Excel
- */
+/** Exporter les demandes en CSV */
 export function exportToExcel(): void {
-    // Pour exporter, on ouvre directement le Google Sheet
-    // L'utilisateur peut ensuite faire Fichier > Télécharger > Excel
-    const sheetId = extractSheetIdFromUrl(API_URL);
-    if (sheetId) {
-        const exportUrl = `https://docs.google.com/spreadsheets/d/${sheetId}/export?format=xlsx`;
-        window.open(exportUrl, '_blank');
-    } else {
-        alert('Impossible d\'exporter : ID du Google Sheet non trouvé');
-    }
-}
-
-/**
- * Extraire l'ID du Google Sheet depuis l'URL de l'API
- */
-function extractSheetIdFromUrl(url: string): string | null {
-    // L'URL Apps Script contient l'ID du script, pas du sheet
-    // On va donc demander à l'utilisateur de configurer l'ID manuellement
-    // ou on peut le stocker dans une variable d'environnement
-    const sheetId = import.meta.env.VITE_GOOGLE_SHEET_ID;
-    return sheetId || null;
+    // L'export est géré directement dans Admin.tsx avec les données déjà chargées
+    console.log('Export CSV géré dans le composant Admin');
 }
