@@ -14,7 +14,7 @@ import { AdminLogin } from './pages/AdminLogin';
 function App() {
     return (
         <LanguageProvider>
-            <BrowserRouter basename="/sogis">
+            <BrowserRouter>
                 <ScrollToHash />
                 <Routes>
                     {/* Routes publiques avec Layout */}
