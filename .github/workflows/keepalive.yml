@@ -1,0 +1,58 @@
+name: Keep Supabase Alive
+
+on:
+  schedule:
+    # Exécution chaque lundi à 8h UTC
+    - cron: '0 8 * * 1'
+  workflow_dispatch: # Permet l'exécution manuelle
+
+jobs:
+  ping-supabase:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Supabase Database
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Run keep-alive query
+        env:
+          SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+        run: |
+          npm install @supabase/supabase-js
+          node -e "
+            const { createClient } = require('@supabase/supabase-js');
+            const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY);
+            
+            async function keepAlive() {
+              console.log('🔄 Ping Supabase - ' + new Date().toISOString());
+              
+              const { count, error: e1 } = await supabase
+                .from('requests')
+                .select('*', { count: 'exact', head: true });
+              
+              if (e1) {
+                console.error('❌ Erreur requests:', e1.message);
+              } else {
+                console.log('✅ Table requests accessible - ' + count + ' lignes');
+              }
+
+              const { count: c2, error: e2 } = await supabase
+                .from('comments')
+                .select('*', { count: 'exact', head: true });
+              
+              if (e2) {
+                console.error('❌ Erreur comments:', e2.message);
+              } else {
+                console.log('✅ Table comments accessible - ' + c2 + ' lignes');
+              }
+
+              console.log('🏁 Keep-alive terminé avec succès');
+            }
+            
+            keepAlive().catch(err => {
+              console.error('💥 Erreur fatale:', err);
+              process.exit(1);
+            });
+          "
