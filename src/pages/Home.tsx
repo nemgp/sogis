@@ -24,7 +24,7 @@ export const Home = () => {
                         {/* Background Image */}
                         <div className="absolute inset-0 opacity-10 group-hover:opacity-20 transition-opacity">
                             <img
-                                src="/sogis/happy-business.png"
+                                src="/happy-business.png"
                                 alt="Business Success"
                                 className="w-full h-full object-cover"
                             />
@@ -57,7 +57,7 @@ export const Home = () => {
                         {/* Background Image */}
                         <div className="absolute inset-0 opacity-10 group-hover:opacity-20 transition-opacity">
                             <img
-                                src="/sogis/happy-event.png"
+                                src="/happy-event.png"
                                 alt="Event Success"
                                 className="w-full h-full object-cover"
                             />
@@ -114,7 +114,7 @@ export const Home = () => {
                         </div>
                         <div className="rounded-xl overflow-hidden">
                             <img
-                                src="/sogis/team-cameroon.png"
+                                src="/team-cameroon.png"
                                 alt="Notre équipe SOGIS au Cameroun"
                                 className="w-full h-64 object-cover"
                             />
