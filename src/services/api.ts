@@ -168,8 +168,8 @@ export async function deleteRequest(ticketId: string): Promise<void> {
 /** Soumettre un nouveau commentaire */
 export async function submitComment(
     data: Omit<Comment, 'id' | 'timestamp' | 'status'>
-): Promise<{ id: string }> {
-    const { data: inserted, error } = await supabase
+): Promise<void> {
+    const { error } = await supabase
         .from('comments')
         .insert({
             name: data.name,
@@ -178,12 +178,9 @@ export async function submitComment(
             comment: data.comment,
             service_type: data.serviceType,
             status: 'pending',
-        })
-        .select('id')
-        .single();
+        });
 
     if (error) throw new Error(error.message);
-    return { id: inserted.id };
 }
 
 /** Récupérer les commentaires avec filtre */

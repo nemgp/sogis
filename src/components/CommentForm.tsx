@@ -39,7 +39,7 @@ export const CommentForm = ({ pageType }: CommentFormProps) => {
             setSubmitted(true);
         } catch (err) {
             console.error('Erreur lors de la soumission du commentaire:', err);
-            setError('Une erreur est survenue. Veuillez réessayer.');
+            setError(`Une erreur est survenue: ${(err as Error).message || err}`);
         } finally {
             setLoading(false);
         }

@@ -54,7 +54,7 @@ export const ContactForm = ({ serviceType }: ContactFormProps) => {
             setSubmitted(true);
         } catch (err) {
             console.error('Erreur lors de la soumission:', err);
-            setError('Une erreur est survenue. Veuillez réessayer.');
+            setError(`Une erreur est survenue: ${(err as Error).message || err}`);
         } finally {
             setLoading(false);
         }
